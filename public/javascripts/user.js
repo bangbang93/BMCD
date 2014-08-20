@@ -1,13 +1,13 @@
 /**
  * Created by bangbang93 on 14-8-20.
  */
+window.BMCD = {};
 $(document).ready(function (){
     $.get('/user/status',{},function (data,status){
-            console.log(status);
             if (status == 'success'){
-                console.log(data);
                 if (data.success){
-
+                    BMCD.username = data.username;
+                    $('#username').html('<p>' + data.username + '</p>').trigger('loginSuccess');
                 } else {
                     if (!/\/user\/login\.html/.test(window.location.pathname)) {
                         window.location = '/user/login.html?from=' + encodeURIComponent(window.location.pathname);
