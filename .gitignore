@@ -25,4 +25,5 @@ build/Release
 node_modules
 
 
-.idea
+.idea/
+settings.js
