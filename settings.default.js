@@ -8,5 +8,6 @@ module.exports = {
     users:{
         admin: "admin"
     },
-    serverDirectory:'../server'
+    serverDirectory:'../server',
+    port:'25560'
 };
