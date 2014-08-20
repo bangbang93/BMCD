@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('BMCD');
 
-/* GET users listing. */
 router.get('/status', function(req, res) {
     if (!!req.session['username']){
         res.json({

@@ -1,8 +1,16 @@
 #!/usr/bin/env node
+
 var debug = require('debug')('BMCD');
+var path = require('path');
+
+global.settings = require('../settings');
+global.settings.serverDirectory = path.resolve(__dirname, global.settings.serverDirectory);
+debug("服务器路径为" + global.settings.serverDirectory);
+
 var app = require('../app');
 
-app.set('port', process.env['PORT'] || 3000);
+
+app.set('port', global.settings.port);
 
 var server = app.listen(app.get('port'), function() {
   debug('BMCD listening on port ' + server.address().port);
