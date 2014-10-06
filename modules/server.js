@@ -7,7 +7,7 @@ var async = require('async');
 var path = require('path');
 
 exports.listServer = function (callback){
-    console.log("正在搜索" + global.settings.serverDirectory);
+    debug("正在搜索" + global.settings.serverDirectory);
     fs.readdir(global.settings.serverDirectory, function (err, files){
         if (!!err){
             return callback(err);

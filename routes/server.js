@@ -23,4 +23,9 @@ router.get('/list', function (req, res){
         }
     })
 });
+
+router.get('/info/:serverName', function (req, res){
+
+})
+
 module.exports = router;
