@@ -5,34 +5,43 @@ var debug = require('debug')('BMCD');
 var fs = require('fs');
 var async = require('async');
 var path = require('path');
+var mcProtocol = require('minecraft-protocol');
+var Server = require('../models/server');
 
-exports.listServer = function (callback){
-    debug("正在搜索" + global.settings.serverDirectory);
-    fs.readdir(global.settings.serverDirectory, function (err, files){
-        if (!!err){
-            return callback(err);
+exports.listServer = function (cb){
+    Server.getServerList(function (err, result){
+        if (err){
+            return cb(err);
         } else {
-            if (files.length > 0){
-                var serverDir = [];
-                var q = async.queue(fs.stat, 5);
-                q.drain = function () {
-                    return callback(null, serverDir);
-                };
-                files.forEach(function (file){
-                    q.push(path.join(global.settings.serverDirectory, file), function (err ,stats){
-                        if (!!err){
-                            q.kill();
-                            return callback(err);
-                        } else {
-                            if (stats.isDirectory()){
-                                serverDir.push(file);
-                            }
-                        }
-                    })
-                })
-            } else {
-                return callback(null, []);
-            }
+            return cb(null, result);
+        }
+    })
+};
+
+exports.getServerInfo = function (servername, cb){
+    var serverInfo = {
+        path: path.join(global.settings.serverDirectory, servername),
+        name: servername
+    };
+    Server.getServerByName(servername, function (err, server){
+        if (err){
+            return cb(err);
+        } else {
+            mcProtocol.ping({
+                host: server['host'],
+                port: server['port']
+            }, function (err, result){
+                if (err){
+                    serverInfo.maxPlayers = 0;
+                    serverInfo.playerCount = 0;
+                    serverInfo.status = 'failed'
+                } else {
+                    serverInfo.maxPlayers = result.maxPlayers;
+                    serverInfo.playerCount = result.playerCount;
+                    serverInfo.status = 'success'
+                }
+                cb(null, serverInfo);
+            })
         }
     })
 };

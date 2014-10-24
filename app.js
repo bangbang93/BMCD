@@ -23,6 +23,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(global.settings.session));
 
+app.use(function (req, res, next){
+    req.isLogin = !!req.session['uid'];
+    next();
+});
+
 app.use('/user', user);
 app.use('/server', server);
 

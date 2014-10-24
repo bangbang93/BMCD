@@ -7,7 +7,7 @@ $(document).ready(function (){
             if (status == 'success'){
                 if (data.success){
                     BMCD.username = data.username;
-                    $('#username').html('<p>' + data.username + '</p>').trigger('loginSuccess');
+                    $('#username').html('<p>' + data.username + '</p>').trigger('loginSuccess', data.isAdmin);
                 } else {
                     if (!/\/user\/login\.html/.test(window.location.pathname)) {
                         window.location = '/user/login.html?from=' + encodeURIComponent(window.location.pathname);

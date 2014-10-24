@@ -7,7 +7,7 @@ var debug = require('debug')('BMCD');
 var server = require('../modules/server');
 
 router.use(function (req, res, next){
-    if (req.session['username']){
+    if (req.isLogin){
         next();
     } else {
         res.send(403);

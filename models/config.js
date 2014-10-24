@@ -4,38 +4,40 @@
 var Config = require('../model').Config;
 
 exports.get = function (key, cb){
-    Config.findOne({
+    Config.find({
         where: {
             key: key
         }
-    }, function (err, row){
-        if (err){
-            return cb(err);
-        } else {
-            if (row){
-                cb(null, row);
-            } else {
-                cb(null, {});
-            }
-        }
-    })
-};
-
-exports.set = function (key, value, cb){
-    Config.updateOrCreate({
-        where: {
-            key: key
-        },
-        update:{
-            value: value
-        }
-    }, function (err){
-        if (err) {
-            cb(err)
+    }).success(function (row){
+        if (!!row){
+            cb(row);
         } else {
             cb(null);
         }
     })
 };
 
-exports.get(233);
+exports.set = function (key, value, cb){
+    Config.find(key, function (row){
+        if (!!row){
+            Config.update({
+                value: value
+            }, {
+                key: key
+            }).error(function (err){
+                cb(err);
+            }).success(function (){
+                cb();
+            })
+        } else {
+            Config.create({
+                key: key,
+                value: value
+            }).error(function (err){
+                cb(err);
+            }).success(function (){
+                cb();
+            })
+        }
+    })
+};
