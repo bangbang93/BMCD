@@ -45,3 +45,24 @@ exports.getServerInfo = function (servername, cb){
         }
     })
 };
+
+exports.createServer = function (serverName, host, port, path, cb){
+    fs.readdir(path, function (err, files){
+        if (err){
+            cb(err)
+        } else {
+            Server.addServer({
+                serverName: serverName,
+                host: host,
+                port: port,
+                path: path
+            }, function (err){
+                if (err){
+                    cb(err);
+                } else {
+                    cb(null, true);
+                }
+            })
+        }
+    })
+};

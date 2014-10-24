@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('BMCD');
-var server = require('../modules/server');
+var Server = require('../modules/server');
 
 router.use(function (req, res, next){
     if (req.isLogin){
@@ -15,7 +15,7 @@ router.use(function (req, res, next){
 });
 
 router.get('/list', function (req, res){
-    server.listServer(function (err, list){
+    Server.listServer(function (err, list){
         if (err){
             res.json(500, err);
         } else {
@@ -25,8 +25,19 @@ router.get('/list', function (req, res){
 });
 
 router.get('/info/:serverName', function (req, res){
-
+    var serverName = req.param('serverName');
+    if (!serverName){
+        return res.send(400);
+    }
+    Server.getServerInfo(serverName, function (err, result){
+        if (err){
+            res.json(500, err);
+        } else {
+            res.json(result);
+        }
+    })
 });
+
 
 
 module.exports = router;

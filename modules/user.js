@@ -11,7 +11,10 @@ exports.login = function (username, password, cb){
             if (!!row){
                 console.log(row);
                 if (row['password'] == password){
-                    cb(null, row['id']);
+                    cb(null, {
+                        uid: row['id'],
+                        isAdmin: row['isAdmin']
+                    });
                 } else {
                     cb(null, false);
                 }

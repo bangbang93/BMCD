@@ -10,7 +10,8 @@ router.get('/status', function(req, res) {
             success: true,
             code: 0,
             message: '已登录',
-            username: req.session['username']
+            username: req.session['username'],
+            isAdmin: req.session['isAdmin']
         })
     } else {
         res.json({
@@ -29,13 +30,14 @@ router.post('/login', function (req, res){
         return res.send(400);
     }
 
-    User.login(username, password, function (err, success){
+    User.login(username, password, function (err, result){
         if (err){
             res.json(500, err);
         } else {
-            if (success){
+            if (result){
                 req.session['username'] = username;
-                req.session['uid'] = success;
+                req.session['uid'] = result['uid'];
+                req.session['isAdmin'] = result['isAdmin'];
                 res.json({
                     success: true,
                     code: 0,
@@ -52,7 +54,7 @@ router.post('/login', function (req, res){
     })
 });
 router.get('/logout', function (req, res){
-    req.session.destroy();
+    req.session = null;
     res.json({
         success: true,
         code: 0,

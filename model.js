@@ -29,8 +29,9 @@ exports.Manage = sequelize.define('manage', {
     sid: Sequelize.INTEGER
 });
 
-exports.Server = sequelize.define('server', {
+exports.Server = sequelize.define('Server', {
     serverName: Sequelize.STRING,
     host: Sequelize.STRING,
-    port: Sequelize.INTEGER
+    port: Sequelize.INTEGER,
+    path: Sequelize.STRING
 });

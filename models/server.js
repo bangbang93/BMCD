@@ -26,3 +26,16 @@ exports.getServerList = function (cb){
         cb(null, result);
     })
 };
+
+exports.addServer = function (data, cb){
+    Server.create({
+        serverName: data.serverName,
+        host: data.host,
+        port: data.port,
+        path: data.path
+    }).error(function (err){
+        cb(err);
+    }).success(function (){
+        cb(null);
+    })
+};
