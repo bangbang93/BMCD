@@ -8,10 +8,17 @@ $(document).ready(function (){
         }
         $.get('/server/list',{}, function (data, status){
             if (status == 'success'){
-                var $servers = $('#servers');
-                data.forEach(function (server){
-                    $servers.append('<li><a target="frame" href="/server/status.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
-                })
+                if (window.location.pathname.indexOf('/admin') != 0){
+                    var $servers = $('#servers');
+                    data.forEach(function (server){
+                        $servers.append('<li><a target="frame" href="/server/status.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
+                    })
+                } else {
+                    var $serverList = $('#server-list');
+                    data.forEach(function (server){
+                        $serverList.prepend('<li><a href="/admin/edit.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
+                    })
+                }
             }
         })
     });

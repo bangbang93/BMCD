@@ -15,13 +15,23 @@ router.use(function (req, res, next){
 });
 
 router.get('/list', function (req, res){
-    Server.listServer(function (err, list){
-        if (err){
-            res.json(500, err);
-        } else {
-            res.json(list);
-        }
-    })
+    if (req.isAdmin){
+        Server.listServer(null, function (err, list){
+            if (err){
+                res.json(500, err);
+            } else {
+                res.json(list);
+            }
+        })
+    } else {
+        Server.listServer(req.session['uid'], function (err, list){
+            if (err){
+                res.json(500, err);
+            } else {
+                res.json(list);
+            }
+        })
+    }
 });
 
 router.get('/info/:serverName', function (req, res){

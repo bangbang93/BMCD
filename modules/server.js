@@ -8,8 +8,8 @@ var path = require('path');
 var mcProtocol = require('minecraft-protocol');
 var Server = require('../models/server');
 
-exports.listServer = function (cb){
-    Server.getServerList(function (err, result){
+exports.listServer = function (uid, cb){
+    Server.getServerList(uid, function (err, result){
         if (err){
             return cb(err);
         } else {

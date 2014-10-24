@@ -9,7 +9,7 @@ var Server = require('../modules/server');
 var Config = require('../modules/config');
 
 router.use(function (req, res, next){
-    if (!req.isLogin || !req.session['isAdmin']){
+    if (!req.isLogin || !req.isAdmin){
         res.send(403);
     } else {
         next();
@@ -26,7 +26,11 @@ router.post('/server/create', function (req, res){
     }
     Server.createServer(serverName, host, port, path, function (err, success){
         if (err){
-            res.json(500, err);
+            if (err.errno == 34){
+                res.send(404);
+            } else {
+                res.json(500, err);
+            }
         } else {
             res.send(204);
         }
@@ -35,14 +39,18 @@ router.post('/server/create', function (req, res){
 
 router.post('/configure', function (req, res){
     var java = req.param('java');
-
+    Config.set('java', java);
+    res.send(204);
 });
 
 router.get('/configure', function (req, res){
-    var data = {
-        java: Config.get('java')
-    };
-    res.json(data);
+    Config.getAll(function (rows){
+        var data = {};
+        rows.forEach(function (e){
+            data[e.key] = e.value;
+        });
+        res.json(data);
+    })
 });
 
 router.get('/status', function (req, res){

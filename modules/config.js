@@ -9,12 +9,21 @@ exports.get = function (key, cb){
     }
     Config.get(key, function (row){
         if (!!row){
-            cb(row.value);
-            return row.value;
+            cb(row.dataValues.value);
+            return row.dataValues.value;
         } else {
             cb(null);
             return null;
         }
+    })
+};
+
+exports.getAll = function (cb){
+    if (!cb){
+        cb = function (){};
+    }
+    Config.getAll(function (rows){
+        cb(rows);
     })
 };
 

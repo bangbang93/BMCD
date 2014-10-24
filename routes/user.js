@@ -11,7 +11,7 @@ router.get('/status', function(req, res) {
             code: 0,
             message: '已登录',
             username: req.session['username'],
-            isAdmin: req.session['isAdmin']
+            isAdmin: req.isAdmin
         })
     } else {
         res.json({

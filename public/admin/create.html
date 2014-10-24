@@ -23,6 +23,16 @@
                             </div>
                         </div>
                     </li>
+                    <li><a href="#dropdown2-jira2" aria-owns="dropdown2-jira2" aria-haspopup="true" class="aui-dropdown2-trigger" aria-controls="dropdown2-header7">BMCD管理<span class="aui-icon-dropdown"></span></a>
+                        <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-jira2" style="display: none; top: 40px; min-width: 160px; left: 1213px; " aria-hidden="true">
+                            <div class="aui-dropdown2-section">
+                                <ul id="">
+                                    <li><a href="/admin/configure.html">参数设置</a></li>
+                                    <li><a href="/admin/users.html">用户管理</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
             <div class="aui-header-secondary">
@@ -82,7 +92,7 @@
                             </div>
                             <div class="button-container">
                                 <div class="buttons">
-                                    <button class="aui-button aui-button-primary" type="submit">新建</button>
+                                    <button class="aui-button aui-button-primary" type="submit">提交</button>
                                     <button class="aui-button aui-button-link" type="reset">清空</button>
                                 </div>
                             </div>
@@ -90,6 +100,7 @@
                     </section>
                 </div>
             </div>
+        </div>
     </section>
 
 </div>
@@ -97,6 +108,7 @@
 <script src="/aui/js/aui-all.js"></script>
 <script src="//cdnjscn.b0.upaiyun.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="/javascripts/user.js"></script>
+<script src="/javascripts/server.js"></script>
 <script>
     $(document).ready(function (){
         $('#editServer').on('submit', function (){
@@ -105,16 +117,26 @@
             var $host = $('#host');
             var $port = $('#port');
             var $path = $('#path');
-            $.post('/admin/server/create',{
-                serverName: $serverName.val(),
-                host: $host.val(),
-                port: $port.val(),
-                path: $path.val()
-            }, function (data){
-                window.location = '/admin';
+            $.ajax('/admin/server/create',{
+                data: {
+                    serverName: $serverName.val(),
+                    host: $host.val(),
+                    port: $port.val(),
+                    path: $path.val()
+                },
+                method: 'post',
+                statusCode: {
+                    204: function (){
+                        window.location = '/admin';
+                    },
+                    404: function (){
+                        $path.after('<div class="error">路径不存在</div>');
+                    }
+                }
             });
             return false;
         });
+
     })
 </script>
 </html>

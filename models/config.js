@@ -17,8 +17,18 @@ exports.get = function (key, cb){
     })
 };
 
+exports.getAll = function (cb){
+    Config.findAll({}).success(function (rows){
+        cb(rows);
+    })
+};
+
 exports.set = function (key, value, cb){
-    Config.find(key, function (row){
+    Config.find({
+        where:{
+            key:key
+        }
+    }).success(function (row){
         if (!!row){
             Config.update({
                 value: value
@@ -39,6 +49,6 @@ exports.set = function (key, value, cb){
                 cb();
             })
         }
-    })
+    });
 };
 

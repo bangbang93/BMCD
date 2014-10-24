@@ -26,6 +26,7 @@ app.use(session(global.settings.session));
 
 app.use(function (req, res, next){
     req.isLogin = !!req.session['uid'];
+    req.isAdmin = !!req.session['isAdmin'];
     next();
 });
 
