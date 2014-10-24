@@ -15,3 +15,7 @@ app.set('port', global.settings.port);
 var server = app.listen(app.get('port'), function() {
   debug('BMCD listening on port ' + server.address().port);
 });
+
+process.on('uncaughtException', function (err){
+    console.log('crash:' + err);
+});

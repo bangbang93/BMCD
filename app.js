@@ -8,6 +8,7 @@ var session = require('cookie-session');
 
 var user = require('./routes/user');
 var server = require('./routes/server');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -23,8 +24,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(global.settings.session));
 
+app.use(function (req, res, next){
+    req.isLogin = !!req.session['uid'];
+    req.isAdmin = !!req.session['isAdmin'];
+    next();
+});
+
 app.use('/user', user);
 app.use('/server', server);
+app.use('/admin', admin);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

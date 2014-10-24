@@ -14,10 +14,21 @@
             <div class="aui-header-primary">
                 <h1 id="logo" class="aui-header-logo"><a href="#"><span class="aui-header-logo-device">BMCD</span></a></h1>
                 <ul class="aui-nav">
-                    <li><a href="#dropdown2-jira3" aria-owns="dropdown2-jira3" aria-haspopup="true" class="aui-dropdown2-trigger" aria-controls="dropdown2-header7">BMCD<span class="aui-icon-dropdown"></span></a>
-                        <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-jira3" style="display: none; top: 40px; min-width: 160px; left: 1213px; " aria-hidden="true">
+                    <li><a href="#dropdown2-jira1" aria-owns="dropdown2-jira1" aria-haspopup="true" class="aui-dropdown2-trigger" aria-controls="dropdown2-header7">服务器管理<span class="aui-icon-dropdown"></span></a>
+                        <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-jira1" style="display: none; top: 40px; min-width: 160px; left: 1213px; " aria-hidden="true">
                             <div class="aui-dropdown2-section">
                                 <ul id="server-list">
+                                    <li><button class="aui-button" onclick="window.location = '/admin/create.html'">创建</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="#dropdown2-jira2" aria-owns="dropdown2-jira2" aria-haspopup="true" class="aui-dropdown2-trigger" aria-controls="dropdown2-header7">BMCD管理<span class="aui-icon-dropdown"></span></a>
+                        <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-jira2" style="display: none; top: 40px; min-width: 160px; left: 1213px; " aria-hidden="true">
+                            <div class="aui-dropdown2-section">
+                                <ul id="">
+                                    <li><a href="/admin/configure.html">参数设置</a></li>
+                                    <li><a href="/admin/users.html">用户管理</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -35,7 +46,7 @@
                         <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-header9" style="display: none; top: 40px; min-width: 160px; left: 1213px;" aria-hidden="true">
                             <div class="aui-dropdown2-section" id="adminMenu" style="display:hidden">
                                 <ul>
-                                    <li><a href="/admin">管理</a></li>
+                                    <li><a href="/admin/index.html">管理</a></li>
                                 </ul>
                             </div>
                             <div class="aui-dropdown2-section">
@@ -54,26 +65,31 @@
             <div class="aui-page-header-inner">
                 <div class="aui-page-header-main">
                     <ol class="aui-nav aui-nav-breadcrumbs">
-                        <li class="aui-nav-selected"> BMCD </li>
+                        <li><a href="/">BMCD</a> </li>
+                        <li><a href="/admin">后台</a> </li>
+                        <li class="aui-nav-current"><a href="/admin/configure.html">参数设置</a> </li>
                     </ol>
-                    <h1>BMCD服务器管理</h1>
+                    <h1>BMCD参数设置</h1>
                 </div>
             </div>
         </header>
         <div class="aui-page-panel">
             <div class="aui-page-panel-inner">
                 <div class="aui-page-panel-nav">
-                    <nav class="aui-navgroup aui-navgroup-vertical">
-                        <div class="aui-navgroup-inner">
-                            <div class="aui-nav-heading"><strong><h3>服务器</h3></strong></div>
-                            <ul class="aui-nav" id="servers">
-                            </ul>
-                        </div>
-                    </nav>
+                    <section>
+                        <form class="aui" action="/admin/configure" method="post" id="configure">
+                            <div class="field-group">
+                                <label for="java">java</label><input id="java" type="text" name="java" class="long-field text"/>
+                            </div>
+                            <div class="button-container">
+                                <div class="buttons">
+                                    <button class="aui-button aui-button-primary" type="submit">保存</button>
+                                    <button class="aui-button aui-button-link" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
                 </div>
-                <section class="aui-page-panel-content" style="height:800px;">
-                    <iframe id="frame" name="frame" style="margin:0;border:0;width:100%;height:100%;"></iframe>
-                </section>
             </div>
         </div>
     </section>
@@ -84,4 +100,12 @@
 <script src="//cdnjscn.b0.upaiyun.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="/javascripts/user.js"></script>
 <script src="/javascripts/server.js"></script>
+<script>
+    $(document).ready(function (){
+        $.get('/admin/configure', function (data){
+            var $configure = $('#configure');
+            $configure.find('#java').val(data.java);
+        })
+    })
+</script>
 </html>

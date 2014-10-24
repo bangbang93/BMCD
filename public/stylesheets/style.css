@@ -6,3 +6,10 @@ body {
 a {
   color: #00B7FF;
 }
+.server-status-key {
+    width: 30%
+}
+#server-status{
+    line-height: 30px;
+    vertical-align: middle;
+}
