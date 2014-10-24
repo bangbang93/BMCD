@@ -6,9 +6,10 @@ var router = express.Router();
 var debug = require('debug')('BMCD');
 
 var Server = require('../modules/server');
+var Config = require('../modules/config');
 
 router.use(function (req, res, next){
-    if (!req.isLogin || req.session['isAdmin']){
+    if (!req.isLogin || !req.session['isAdmin']){
         res.send(403);
     } else {
         next();
@@ -31,4 +32,28 @@ router.post('/server/create', function (req, res){
         }
     })
 });
+
+router.post('/configure', function (req, res){
+    var java = req.param('java');
+
+});
+
+router.get('/configure', function (req, res){
+    var data = {
+        java: Config.get('java')
+    };
+    res.json(data);
+});
+
+router.get('/status', function (req, res){
+    res.json({
+        uptime: process.uptime(),
+        uid: process.getuid(),
+        gid: process.getgid(),
+        arch: process.arch,
+        platform: process.platform,
+        memoryUsage: process.memoryUsage()
+    })
+});
+
 module.exports = router;

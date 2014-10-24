@@ -6,11 +6,11 @@ $(document).ready(function (){
         if (result.isAdmin){
 
         }
-        $.get('/Server/list',{}, function (data, status){
+        $.get('/server/list',{}, function (data, status){
             if (status == 'success'){
                 var $servers = $('#servers');
                 data.forEach(function (server){
-                    $servers.append('<li><a target="frame" href="/Server/status.html#' + server + '" >' + server + '</a></li>')
+                    $servers.append('<li><a target="frame" href="/server/status.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
                 })
             }
         })

@@ -20,24 +20,29 @@ exports.listServer = function (cb){
 
 exports.getServerInfo = function (servername, cb){
     var serverInfo = {
-        path: path.join(global.settings.serverDirectory, servername),
         name: servername
     };
     Server.getServerByName(servername, function (err, server){
         if (err){
             return cb(err);
         } else {
+            serverInfo.host = server['host'];
+            serverInfo.port = server['port'];
             mcProtocol.ping({
                 host: server['host'],
                 port: server['port']
             }, function (err, result){
                 if (err){
+                    serverInfo.path = server.path;
                     serverInfo.maxPlayers = 0;
                     serverInfo.playerCount = 0;
+                    serverInfo.version = '0.0';
                     serverInfo.status = 'failed'
                 } else {
-                    serverInfo.maxPlayers = result.maxPlayers;
-                    serverInfo.playerCount = result.playerCount;
+                    serverInfo.path = server.path;
+                    serverInfo.maxPlayers = result.players.max;
+                    serverInfo.playerCount = result.players.online;
+                    serverInfo.version = result.version;
                     serverInfo.status = 'success'
                 }
                 cb(null, serverInfo);
