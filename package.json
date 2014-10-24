@@ -14,10 +14,11 @@
     "ejs": "~0.8.5",
     "express": "~4.2.0",
     "express-session": "^1.7.6",
+    "jugglingdb": "^0.3.0",
+    "jugglingdb-sqlite3": "0.0.5",
     "morgan": "~1.0.0",
     "request": "^2.40.0",
     "socket.io": "^1.0.6",
-    "sqlite3": "^3.0.2",
     "static-favicon": "~1.0.0"
   }
 }
