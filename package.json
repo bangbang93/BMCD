@@ -17,6 +17,7 @@
     "minecraft-protocol": "^0.12.3",
     "morgan": "~1.0.0",
     "request": "^2.40.0",
+    "sequelize": "^2.0.0-rc2",
     "socket.io": "^1.0.6",
     "sqlite3": "^3.0.2",
     "static-favicon": "~1.0.0"
