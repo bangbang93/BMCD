@@ -27,5 +27,4 @@ node_modules
 
 .idea/
 settings.js
-server/
 *.db
