@@ -7,6 +7,7 @@ var async = require('async');
 var path = require('path');
 var mcProtocol = require('minecraft-protocol');
 var Server = require('../models/server');
+var Process = require('./process');
 
 exports.listServer = function (uid, cb){
     Server.getServerList(uid, function (err, result){
@@ -71,3 +72,9 @@ exports.createServer = function (serverName, host, port, path, cb){
         }
     })
 };
+
+exports.startServer = function (serverName, cb){
+    Server.getServerByName(serverName, function (err, server){
+
+    })
+}
