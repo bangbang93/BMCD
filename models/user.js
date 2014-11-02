@@ -12,7 +12,7 @@ exports.getUserByName = function (username, cb){
         cb(err)
     }).success(function (row){
         if (row){
-            cb(null, row.dataValues);
+            cb(null, row);
         } else {
             cb();
         }
@@ -25,5 +25,11 @@ exports.addUser = function (username, password, cb){
     user.password = password;
     user.save(function (err){
         cb(err);
+    })
+};
+
+exports.listUser = function (cb){
+    User.findAll({}).success(function (rows){
+        cb(rows);
     })
 };
