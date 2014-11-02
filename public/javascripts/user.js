@@ -29,7 +29,7 @@ $(document).ready(function (){
         if (pass){
             $.post('/user/login',{
                 username:$('#username').val(),
-                password:$('#password').val()
+                password: $.md5($('#password').val())
             },function (data, status){
                     if (status == 'success'){
                         if (data.success){

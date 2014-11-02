@@ -7,6 +7,7 @@ var debug = require('debug')('BMCD');
 
 var Server = require('../modules/server');
 var Config = require('../modules/config');
+var User = require('../modules/user');
 
 router.use(function (req, res, next){
     if (!req.isLogin || !req.isAdmin){
@@ -58,6 +59,25 @@ router.get('/status', function (req, res){
         arch: process.arch,
         platform: process.platform,
         memoryUsage: process.memoryUsage()
+    })
+});
+
+router.get('/userList', function (req, res){
+    User.listUser(function (users){
+        res.json(users);
+    })
+});
+
+router.post('/changePassword', function (req, res){
+    var username = req.param('username');
+    var password = req.param('password');
+
+    User.changePassword(username, password, function (err){
+        if (err){
+            res.json(500, err);
+        } else {
+            res.send(204);
+        }
     })
 });
 

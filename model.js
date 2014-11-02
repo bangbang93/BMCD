@@ -8,10 +8,6 @@ var sequelize = new Sequelize('bmcd', null, null, {
 });
 
 sequelize.authenticate();
-sequelize.sync({
-    logging: console.log
-//    force: true
-});
 
 exports.Config = sequelize.define('config', {
     key: Sequelize.STRING,
@@ -35,6 +31,21 @@ exports.Server = sequelize.define('server', {
     port: Sequelize.INTEGER,
     path: Sequelize.STRING,
     file: Sequelize.STRING
+});
+
+sequelize.sync({
+    logging: console.log
+//    force: true
+}).success(function (){
+    exports.User.findAll().success(function (rows){
+        if (rows.length === 0){
+            exports.User.create({
+                username: 'admin',
+                password: '21232f297a57a5a743894a0e4a801fc3',
+                isAdmin: true
+            })
+        }
+    })
 });
 
 exports.User.hasMany(exports.Server);

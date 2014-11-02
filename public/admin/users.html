@@ -67,6 +67,7 @@
                     <ol class="aui-nav aui-nav-breadcrumbs">
                         <li><a href="/">BMCD</a> </li>
                         <li class="aui-nav-selected"><a href="/admin">后台</a> </li>
+                        <li class="aui-nav-selected"><a href="/admin/users.html">用户管理</a> </li>
                     </ol>
                     <h1>BMCD服务器管理</h1>
                 </div>
@@ -76,27 +77,14 @@
             <div class="aui-page-panel-inner">
                 <div class="aui-page-panel-nav">
                     <section>
-                        <table class="aui" id="status">
+                        <table class="aui" id="users">
+                            <thead>
                             <tr>
-                                <td>BMCD运行时间</td>
-                                <td></td>
+                                <th>用户名</th>
+                                <th>管理服务器数</th>
+                                <th>操作</th>
                             </tr>
-                            <tr>
-                                <td>BMCD用户ID(UID)</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>BMCD用户组ID(GID)</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>服务器处理器类型</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>服务器系统</td>
-                                <td></td>
-                            </tr>
+                            </thead>
                         </table>
                     </section>
                 </div>
@@ -111,36 +99,18 @@
 <script src="/javascripts/user.js"></script>
 <script src="/javascripts/server.js"></script>
 <script>
-    function secondToDate(second) {
-        if (!second) {
-            return 0;
-        }
-        var time = '';
-        if (second >= 24 * 3600) {
-            time += parseInt(second / (24 * 3600)) + '天';
-            second %= 24 * 3600;
-        }
-        if (second >= 3600) {
-            time += parseInt(second / 3600) + '小时';
-            second %= 3600;
-        }
-        if (second >= 60) {
-            time += parseInt(second / 60) + '分钟';
-            second %= 60;
-        }
-        if (second > 0) {
-            time += second + '秒';
-        }
-        return time;
-    }
     $(document).ready(function (){
-        $.get('/admin/status', function (data){
-            var $status = $('#status');
-            $status.find('tr').eq(0).find('td').eq(1).text(secondToDate(data['uptime']));
-            $status.find('tr').eq(1).find('td').eq(1).text(data['uid']);
-            $status.find('tr').eq(2).find('td').eq(1).text(data['gid']);
-            $status.find('tr').eq(3).find('td').eq(1).text(data['arch']);
-            $status.find('tr').eq(4).find('td').eq(1).text(data['platform']);
+        var $list = $('#users');
+        $.get('/admin/userList', function (data){
+            data.forEach(function (e){
+                $list.append('<tr>' +
+                        '<td>'+ e.username + '</td>' +
+                        '<td>' +'</td>' +
+                        '<td><button class="aui-button changePassword" data-bind="' + e.username + '">修改密码</button>');
+            })
+        });
+        $list.on('click', '.changePassword', function (){
+            window.location = '/admin/user/edit.html#' + encodeURIComponent($(this).attr('data-bind'));
         })
     })
 </script>
