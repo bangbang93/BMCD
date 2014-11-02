@@ -6,7 +6,11 @@ var fs = require('fs');
 var async = require('async');
 var path = require('path');
 var mcProtocol = require('minecraft-protocol');
+
 var Server = require('../models/server');
+var Process = require('./process');
+
+global.servers = {};
 
 exports.listServer = function (uid, cb){
     Server.getServerList(uid, function (err, result){
@@ -28,31 +32,43 @@ exports.getServerInfo = function (servername, cb){
         } else {
             serverInfo.host = server['host'];
             serverInfo.port = server['port'];
+            serverInfo.path = server['path'];
+            serverInfo.file = server['file'];
+            var isReturn = false;
             mcProtocol.ping({
                 host: server['host'],
                 port: server['port']
             }, function (err, result){
                 if (err){
-                    serverInfo.path = server.path;
                     serverInfo.maxPlayers = 0;
                     serverInfo.playerCount = 0;
                     serverInfo.version = '0.0';
                     serverInfo.status = 'failed'
                 } else {
-                    serverInfo.path = server.path;
                     serverInfo.maxPlayers = result.players.max;
                     serverInfo.playerCount = result.players.online;
                     serverInfo.version = result.version;
                     serverInfo.status = 'success'
                 }
                 cb(null, serverInfo);
-            })
+                isReturn = true;
+            });
+            setTimeout(function (){
+                if (!isReturn){
+                    serverInfo.path = server.path;
+                    serverInfo.maxPlayers = 0;
+                    serverInfo.playerCount = 0;
+                    serverInfo.version = '0.0';
+                    serverInfo.status = 'timed';
+                    cb(null, serverInfo);
+                }
+            }, 5000);
         }
     })
 };
 
-exports.createServer = function (serverName, host, port, path, cb){
-    fs.readdir(path, function (err, files){
+exports.createServer = function (serverName, host, port, path, file, cb){
+    fs.readdir(path, function (err){
         if (err){
             cb(err)
         } else {
@@ -60,7 +76,8 @@ exports.createServer = function (serverName, host, port, path, cb){
                 serverName: serverName,
                 host: host,
                 port: port,
-                path: path
+                path: path,
+                file: file
             }, function (err){
                 if (err){
                     cb(err);
@@ -70,4 +87,82 @@ exports.createServer = function (serverName, host, port, path, cb){
             })
         }
     })
+};
+
+exports.startServer = function (serverName, cb){
+    Server.getServerByName(serverName, function (err, server){
+        if (err){
+            return cb(err);
+        } else {
+            if (!!global.servers[serverName]){
+                return cb({
+                    errCode: 2,
+                    errMsg: 'Server Already Running'
+                });
+            } else {
+                try{
+                    var process = new Process(server.serverName, server.path, server.file);
+                    process.on('output', function (data){
+                        debug(data.toString());
+                    });
+                    global.servers[server.serverName] = process;
+                    process.start();
+                    return cb(null, process.pid);
+                } catch (err) {
+                    if (err.errCode == 1){
+                        return cb(err);
+                    }
+                }
+            }
+        }
+    })
+};
+
+exports.stopServer = function (serverName, cb){
+    if (!!global.servers[serverName]){
+        var server = global.servers[serverName];
+        server.stop();
+        server.on('exit', function (){
+            delete global.servers[serverName];
+        });
+        cb();
+    } else {
+        cb({
+            errCode: 3,
+            errMsg: 'Server not Exist'
+        });
+    }
+};
+
+exports.killServer = function (serverName, cb){
+    if (!!global.servers[serverName]){
+        var server = global.servers[serverName];
+        server.kill();
+        cb();
+    } else {
+        cb({
+            errCode: 3,
+            errMsg: 'Server not Exist'
+        });
+    }
+};
+
+exports.io = function(socket, nsp){
+    debug(socket.id + ' connect to /server');
+    socket.on('init', function (data){
+        debug(socket.id + ' in ' + data.server + ' console');
+        var server = global.servers[data.server];
+        if (!!server){
+            socket.emit('history', server.console);
+            server.on('output',function (data){
+                socket.emit('console', data.toString());
+            });
+            socket.on('command', function (data){
+                server.input(data);
+            })
+        } else {
+            server.disconnect();
+        }
+
+    });
 };

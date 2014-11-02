@@ -37,7 +37,8 @@ exports.addServer = function (data, cb){
         serverName: data.serverName,
         host: data.host,
         port: data.port,
-        path: data.path
+        path: data.path,
+        file: data.file
     }).error(function (err){
         cb(err);
     }).success(function (){

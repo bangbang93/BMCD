@@ -21,10 +21,11 @@ router.post('/server/create', function (req, res){
     var host = req.param('host');
     var port = req.param('port');
     var path = req.param('path');
-    if (!serverName || !host || !port || !path){
+    var file = req.param('file');
+    if (!serverName || !host || !port || !path || !file){
         return res.send(400);
     }
-    Server.createServer(serverName, host, port, path, function (err, success){
+    Server.createServer(serverName, host, port, path, file, function (err, success){
         if (err){
             if (err.errno == 34){
                 res.send(404);
@@ -44,12 +45,8 @@ router.post('/configure', function (req, res){
 });
 
 router.get('/configure', function (req, res){
-    Config.getAll(function (rows){
-        var data = {};
-        rows.forEach(function (e){
-            data[e.key] = e.value;
-        });
-        res.json(data);
+    Config.getAll(function (err, config){
+        res.json(config);
     })
 });
 

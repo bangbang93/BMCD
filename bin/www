@@ -16,6 +16,10 @@ var server = app.listen(app.get('port'), function() {
   debug('BMCD listening on port ' + server.address().port);
 });
 
-process.on('uncaughtException', function (err){
-    console.log('crash:' + err);
-});
+var socket = require('../socket')(server);
+
+if (process.env == 'development'){
+    process.on('uncaughtException', function (err){
+        console.log('crash:' + (typeof err === 'string')?err:JSON.stringify(err));
+    });
+}

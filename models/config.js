@@ -3,28 +3,18 @@
  */
 var Config = require('../model').Config;
 
-exports.get = function (key, cb){
-    Config.find({
-        where: {
-            key: key
-        }
-    }).success(function (row){
-        if (!!row){
-            cb(row);
-        } else {
-            cb(null);
-        }
-    })
-};
-
 exports.getAll = function (cb){
+    var config = {};
     Config.findAll({}).success(function (rows){
-        cb(rows);
+        rows.forEach(function (e){
+            config[e.key] = e.value;
+        });
+        cb(null, config);
     })
 };
 
 exports.set = function (key, value, cb){
-    Config.find({
+    Config.findOne({
         where:{
             key:key
         }
