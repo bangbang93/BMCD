@@ -7,13 +7,11 @@ exports.get = function (key, cb){
     if (!cb){
         cb = function (){};
     }
-    Config.get(key, function (row){
-        if (!!row){
-            cb(row.dataValues.value);
-            return row.dataValues.value;
+    Config.getAll(function (err, config){
+        if (err){
+            cb(err);
         } else {
-            cb(null);
-            return null;
+            cb(null, config[key]);
         }
     })
 };
@@ -22,8 +20,9 @@ exports.getAll = function (cb){
     if (!cb){
         cb = function (){};
     }
-    Config.getAll(function (rows){
-        cb(rows);
+    Config.getAll(function (err, config){
+        console.log(config);
+        cb(err, config);
     })
 };
 

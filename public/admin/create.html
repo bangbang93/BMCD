@@ -90,6 +90,9 @@
                             <div class="field-group">
                                 <label for="path">服务器路径<span class="aui-icon icon-required">*</span></label><input id="path" type="text" required="required" class="text medium-field"/>
                             </div>
+                            <div class="field-group">
+                                <label for="path">服务端文件名<span class="aui-icon icon-required">*</span></label><input id="file" type="text" required="required" class="text medium-field" placeholder="minecraft_server.jar"/>
+                            </div>
                             <div class="button-container">
                                 <div class="buttons">
                                     <button class="aui-button aui-button-primary" type="submit">提交</button>
@@ -117,12 +120,14 @@
             var $host = $('#host');
             var $port = $('#port');
             var $path = $('#path');
+            var $file = $('#file');
             $.ajax('/admin/server/create',{
                 data: {
                     serverName: $serverName.val(),
                     host: $host.val(),
                     port: $port.val(),
-                    path: $path.val()
+                    path: $path.val(),
+                    file: $file.val()
                 },
                 method: 'post',
                 statusCode: {

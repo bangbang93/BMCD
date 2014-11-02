@@ -48,6 +48,58 @@ router.get('/info/:serverName', function (req, res){
     })
 });
 
+router.get('/start/:serverName', function (req, res){
+    var serverName = req.param('serverName');
+    if (!serverName){
+        return res.send(400);
+    }
+    Server.startServer(serverName, function (err, pid){
+        if (err){
+            if (err.errCode == 1){
+                return res.json(409, err);
+            } else {
+                return res.json(500, err);
+            }
+        } else {
+            res.send(200, pid);
+        }
+    });
+});
 
+router.get('/stop/:serverName', function (req, res){
+    var serverName = req.param('serverName');
+    if (!serverName){
+        return res.send(400);
+    }
+    Server.stopServer(serverName, function (err, pid){
+        if (err){
+            if (err.errCode == 1){
+                return res.json(409, err);
+            } else {
+                return res.json(500, err);
+            }
+        } else {
+            res.send(200, pid);
+        }
+    });
+});
+
+router.get('/kill/:serverName', function (req, res){
+    var serverName = req.param('serverName');
+    if (!serverName){
+        return res.send(400);
+    }
+    Server.killServer(serverName, function (err, pid){
+        if (err){
+            if (err.errCode == 1){
+                return res.json(409, err);
+            } else {
+                return res.json(500, err);
+            }
+        } else {
+            res.send(200, pid);
+        }
+    });
+});
 
 module.exports = router;

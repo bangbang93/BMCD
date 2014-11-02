@@ -15,7 +15,7 @@ sequelize.sync({
 
 exports.Config = sequelize.define('config', {
     key: Sequelize.STRING,
-    value: Sequelize.STRING
+    value: Sequelize.TEXT
 });
 
 exports.User = sequelize.define('user', {
@@ -33,7 +33,8 @@ exports.Server = sequelize.define('server', {
     serverName: Sequelize.STRING,
     host: Sequelize.STRING,
     port: Sequelize.INTEGER,
-    path: Sequelize.STRING
+    path: Sequelize.STRING,
+    file: Sequelize.STRING
 });
 
 exports.User.hasMany(exports.Server);
