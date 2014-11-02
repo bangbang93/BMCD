@@ -46,10 +46,12 @@ BMCDLauncher.prototype.start = function (){
             that.stderr = that.server.stderr;
             that.stdout.on('data', function (data){
                 that.emit('stdout', data);
+                that.emit('output', data);
                 that.output(data.toString());
             });
             that.stderr.on('data', function (data){
-                that.emit('stderr', data.toString());
+                that.emit('stderr', data);
+                that.emit('output', data);
                 that.output(data.toString());
             });
             that.server.on('exit', function (code, signal){
@@ -77,11 +79,16 @@ BMCDLauncher.prototype.kill = function (signal){
 
 BMCDLauncher.prototype.console = [];
 BMCDLauncher.prototype.output = function (str){
-    str = isBuffer(str)?str.toString():str;
+    str = Buffer.isBuffer(str)?str.toString():str;
     if (this.console.length > 200){
-        this.console.shift();
+        this.console.pop();
     }
     this.console.push(str);
+};
+
+BMCDLauncher.prototype.input = function (command){
+    this.output(command + '\n');
+    this.stdin.write(command + '\n');
 };
 
 module.exports = BMCDLauncher;

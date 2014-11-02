@@ -102,8 +102,10 @@ exports.startServer = function (serverName, cb){
             } else {
                 try{
                     var process = new Process(server.serverName, server.path, server.file);
+                    process.on('output', function (data){
+                        debug(data.toString());
+                    });
                     global.servers[server.serverName] = process;
-                    console.log(process);
                     process.start();
                     return cb(null, process.pid);
                 } catch (err) {
@@ -143,8 +145,19 @@ exports.killServer = function (serverName, cb){
 };
 
 exports.io = function(socket, nsp){
-    debug(socket.id + 'connect to /server');
+    debug(socket.id + ' connect to /server');
     socket.on('init', function (data){
-        socket.join(data['server']);
+        debug(socket.id + ' in ' + data.server + ' console');
+        var server = global.servers[data.server];
+        if (!!server){
+            socket.emit('history', server.console);
+            server.on('output',function (data){
+                socket.emit('console', data.toString());
+            });
+            socket.on('command', function (data){
+                server.input(data);
+            })
+        }
+
     });
 };
