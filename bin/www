@@ -18,7 +18,7 @@ var server = app.listen(app.get('port'), function() {
 
 var socket = require('../socket')(server);
 
-if (process.env == 'development'){
+if (process.env.NODE_ENV != 'development'){
     process.on('uncaughtException', function (err){
         console.log('crash:' + (typeof err === 'string')?err:JSON.stringify(err));
     });
