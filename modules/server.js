@@ -122,6 +122,9 @@ exports.stopServer = function (serverName, cb){
     if (!!global.servers[serverName]){
         var server = global.servers[serverName];
         server.stop();
+        server.on('exit', function (){
+            delete global.servers[serverName];
+        });
         cb();
     } else {
         cb({
@@ -157,6 +160,8 @@ exports.io = function(socket, nsp){
             socket.on('command', function (data){
                 server.input(data);
             })
+        } else {
+            server.disconnect();
         }
 
     });

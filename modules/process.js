@@ -56,7 +56,7 @@ BMCDLauncher.prototype.start = function (){
             });
             that.server.on('exit', function (code, signal){
                 console.log(that.name + ' exit:' + code + ' ' + signal);
-                delete global.servers[that.name];
+                that.emit('exit', code, signal);
             });
             that.server.on('error', function (err){
                 console.log(JSON.parse(err));
