@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/aui/css/aui-all.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <table class="aui" id="server-status">
+            <tbody>
+                <tr>
+                    <td class="server-status-key">
+                        服务器名
+                    </td>
+                    <td>
+                        Loading
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        服务器路径
+                    </td>
+                    <td>
+                        Loading
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        服务器地址
+                    </td>
+                    <td>
+                        Loading
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        当前在线玩家
+                    </td>
+                    <td>
+                        Loading
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        服务器状态
+                    </td>
+                    <td>
+                        <span class="aui-lozenge aui-lozenge-default">Loading</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        操作
+                    </td>
+                    <td>
+                        <button class="aui-button aui-button-primary" id="server-control-open" style="display:none">开启</button>
+                        <button class="aui-button aui-button-primary" id="server-control-stop" style="display:none">关闭</button>
+                        <button class="aui-button aui-button-subtle" id="server-control-setting"><span class="aui-icon aui-icon-small aui-iconfont-configure">设置</span>设置</button>
+                        <button class="aui-button aui-button-link" id="server-control-kill" style="display:none">强行关闭</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="server-status-key">
+                        管理
+                    </td>
+                    <td>
+                        <p class="aui-buttons">
+                            <button class="aui-button" id="server-manager-mod">mod</button>
+                            <button class="aui-button" id="server-manager-plugin">插件</button>
+                            <button class="aui-button" id="server-manager-save">存档</button>
+                            <button class="aui-button" id="server-manager-console">后台</button>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>服务器探测功能暂时只支持1.7以上版本的服务器，1.7以下的服务器将显示超时，不影响其他功能</p>
+    </div>
+</body>
+<script src="/aui/js/aui-all.js"></script>
+<script src="//cdnjscn.b0.upaiyun.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    var serverName = window.location.hash.substr(1);
+    var $status = $('#server-status');
+    var refreshServer = function (){
+        $.get('/server/info/' + serverName, function (data){
+            $status.find('tr').eq(0).find('td').eq(1).text(serverName);
+            $status.find('tr').eq(1).find('td').eq(1).text(data['path']);
+            $status.find('tr').eq(2).find('td').eq(1).text(data['host'] + ':' + data['port']);
+            $status.find('tr').eq(3).find('td').eq(1).text(data['playerCount'] + '/' + data['maxPlayers']);
+            if (data['status'] == 'success'){
+                $status.find('tr').eq(4).find('td').eq(1).html('<span class="aui-lozenge aui-lozenge-success">正常 ' + data['version']['name'] + '</span>');
+                $('#server-control-stop, #server-control-kill').show();
+            } else if (data['status'] == 'failed'){
+                $status.find('tr').eq(4).find('td').eq(1).html('<span class="aui-lozenge aui-lozenge-error">关闭</span>');
+                $('#server-control-open').show();
+                $('#server-control-stop, #server-control-kill').hide();
+            } else {
+                $status.find('tr').eq(4).find('td').eq(1).html('<span class="aui-lozenge aui-lozenge-error">超时</span>');
+                $('#server-control-stop, #server-control-kill').show();
+                $('#server-control-open').show();
+            }
+        });
+    };
+    $(document).ready(function (){
+        refreshServer();
+        setInterval(refreshServer, 5000);
+        $('#server-control-open').on('click', function (){
+            $.get('/server/start/' + serverName);
+        });
+        $('#server-control-stop').on('click', function (){
+            $.get('/server/stop/' + serverName);
+        });
+        $('#server-control-kill').on('click', function (){
+            if (confirm('强行关闭服务器可能会导致存档错误，只有在服务器失去相应且使用关闭功能关不掉的时候才能使用这个命令，确定继续吗？')){
+                $.get('/server/kill/' + serverName);
+            }
+        });
+        $('#server-manager-console').on('click', function (){
+            window.open('/server/console.html#' + serverName);
+        });
+    });
+</script>
+</html>
