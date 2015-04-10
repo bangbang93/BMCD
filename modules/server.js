@@ -23,7 +23,7 @@ var setJava = function (){
 setJava();
 
 exports.listServer = function (uid, cb){
-    Server.getServerList(uid, function (err, result){
+    Server.getServersByUser(uid, function (err, result){
         if (err){
             return cb(err);
         } else {

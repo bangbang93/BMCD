@@ -1,8 +1,9 @@
 /**
  * Created by bangbang93 on 14-11-2.
  */
+var Config = require('./config');
 var socketIO = require('socket.io');
-var session = require('cookie-session')(global.settings.session);
+var session = require('cookie-session')(Config.session);
 var io;
 
 var server = require('./modules/server');

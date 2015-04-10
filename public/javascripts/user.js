@@ -27,28 +27,31 @@ $(document).ready(function (){
             }
         });
         if (pass){
-            $.post('/user/login',{
+            $.ajax('/user/login',{
+              method: 'post',
+              data: {
                 username:$('#username').val(),
                 password: $.md5($('#password').val())
-            },function (data, status){
-                    if (status == 'success'){
-                        if (data.success){
-                            function getQueryString(name) {
-                                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-                                var r = window.location.search.substr(1).match(reg);
-                                if (r != null) return decodeURIComponent(r[2]); return null;
-                            }
-                            window.location = getQueryString('from') || '/';
-                        } else {
-                            AJS.messages.error('#message',{
-                                title:"登陆失败",
-                                body: data.message
-                            });
-                        }
-                    }
+              },
+              statusCode:{
+                200: function (){
+                  function getQueryString(name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) return decodeURIComponent(r[2]); return null;
+                  }
+                  window.location = getQueryString('from') || '/';
+                },
+                403: function (){
+                  AJS.messages.error('#message',{
+                    title:"登陆失败",
+                    body: '用户名或密码错误'
+                  });
+                }
+              }
             });
         }
-    })
+    });
     $('#logout').on('click', function (){
         $.get('/user/logout', function (data, status){
             if (status == 'success'){

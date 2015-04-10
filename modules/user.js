@@ -4,16 +4,15 @@
 var User = require('../models/user');
 
 exports.login = function (username, password, cb){
-    User.getUserByName(username, function (err, row){
+    User.getUserByName(username, function (err, user){
         if (err){
             cb(err);
         } else {
-            if (!!row){
-                console.log(row);
-                if (row['password'] == password){
+            if (!!user){
+                if (user['password'] == password){
                     cb(null, {
-                        uid: row['id'],
-                        isAdmin: row['isAdmin']
+                        uid: user['id'],
+                        isAdmin: user['isAdmin']
                     });
                 } else {
                     cb(null, false);

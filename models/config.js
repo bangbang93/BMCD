@@ -1,50 +1,32 @@
 /**
  * Created by bangbang93 on 14-10-7.
  */
-var Config = require('../model').Config;
+var Config = require('../model').ConfigModel;
 
 exports.get = function (key, cb){
-    exports.getAll(function (err, config){
-        cb(config[key]);
-    })
+    Config.findOne({
+      key: key
+    }, cb);
 };
 
 exports.getAll = function (cb){
-    var config = {};
-    Config.findAll({}).success(function (rows){
-        rows.forEach(function (e){
-            config[e.key] = e.value;
-        });
-        cb(null, config);
-    })
+    Config.find({}, cb);
 };
 
 exports.set = function (key, value, cb){
-    Config.findOne({
-        where:{
-            key:key
-        }
-    }).success(function (row){
-        if (!!row){
-            Config.update({
-                value: value
-            }, {
-                key: key
-            }).error(function (err){
-                cb(err);
-            }).success(function (){
-                cb();
-            })
-        } else {
-            Config.create({
-                key: key,
-                value: value
-            }).error(function (err){
-                cb(err);
-            }).success(function (){
-                cb();
-            })
-        }
-    });
+    Config.findOneAndUpdate({
+      key: key
+    }, {
+      value: value
+    }, function (doc, err){
+      if (!doc){
+        doc = new Config;
+        doc.key = key;
+        doc.value = value;
+        doc.save(cb);
+      } else {
+        cb();
+      }
+    })
 };
 

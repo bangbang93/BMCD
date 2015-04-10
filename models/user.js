@@ -1,35 +1,24 @@
 /**
  * Created by bangbang93 on 14-10-7.
  */
-var User = require('../model').User;
+var User = require('../model').UserModel;
 
 exports.getUserByName = function (username, cb){
-    User.find({
-        where:{
-            username: username
-        }
-    }).error(function (err){
-        cb(err)
-    }).success(function (row){
-        if (row){
-            cb(null, row);
-        } else {
-            cb();
-        }
-    });
+  User.findOne({
+    username: username
+  }, cb)
 };
 
 exports.addUser = function (username, password, cb){
-    var user = new User();
-    user.username = username;
-    user.password = password;
-    user.save(function (err){
-        cb(err);
-    })
+  var user = new User();
+  user.username = username;
+  user.password = password;
+  user.isAdmin = false;
+  user.save(function (err){
+      cb(err);
+  })
 };
 
 exports.listUser = function (cb){
-    User.findAll({}).success(function (rows){
-        cb(rows);
-    })
+    User.find({}, cb);
 };

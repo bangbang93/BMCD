@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('cookie-session');
 
+var Config = require('./config');
+
 var user = require('./routes/user');
 var server = require('./routes/server');
 var admin = require('./routes/admin');
@@ -22,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session(global.settings.session));
+app.use(session(Config.session));
 
 app.use(function (req, res, next){
     req.isLogin = !!req.session['uid'];

@@ -3,8 +3,10 @@
  */
 var mongoose = require('mongoose');
 var Config = require('./config');
+var ObjectId = mongoose.Schema.Types.ObjectId;
+var Mixed = mongoose.Schema.Types.Mixed;
+
 mongoose.connect('mongodb://' + Config.db.host + '/' + Config.db.db);
-var ObjectId = mongoose.ObjectId;
 
 var ConfigSchema = new mongoose.Schema({
   key: String,
@@ -14,7 +16,14 @@ var ConfigSchema = new mongoose.Schema({
 var UserSchema = new mongoose.Schema({
   username: String,
   password: String,
-  servers: [ObjectId]
+  servers: [{
+    type: ObjectId,
+    ref: 'server'
+  }],
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 var ServerSchema = new mongoose.Schema({
@@ -23,9 +32,9 @@ var ServerSchema = new mongoose.Schema({
   port: Number,
   path: String,
   file: String,
-  opt: Object
+  opt: Mixed
 });
 
+exports.ServerModel = mongoose.model('server', ServerSchema);
 exports.ConfigModel = mongoose.model('config', ConfigSchema);
 exports.UserModel = mongoose.model('user', UserSchema);
-exports.ServerModel = mongoose.model('server', ServerSchema);
