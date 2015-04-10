@@ -16,7 +16,7 @@ router.use(function (req, res, next){
 
 router.get('/list', function (req, res){
     if (req.isAdmin){
-        Server.listServer(null, function (err, list){
+        Server.listAllServer(function (err, list){
             if (err){
                 res.json(500, err);
             } else {
@@ -34,12 +34,12 @@ router.get('/list', function (req, res){
     }
 });
 
-router.get('/info/:serverName', function (req, res){
-    var serverName = req.param('serverName');
-    if (!serverName){
+router.get('/info/:sid', function (req, res){
+    var sid = req.param('sid');
+    if (!sid){
         return res.send(400);
     }
-    Server.getServerInfo(serverName, function (err, result){
+    Server.getServerInfo(sid, function (err, result){
         if (err){
             res.json(500, err);
         } else {

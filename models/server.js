@@ -17,6 +17,14 @@ exports.getServersByUser = function (uid, cb){
     })
 };
 
+exports.getServerById = function (sid, cb){
+  Server.findById(sid, cb);
+};
+
+exports.getAllServer = function (cb){
+  Server.find({}, cb);
+};
+
 exports.addServer = function (data, cb){
     var server = new Server({
       name: data.serverName,

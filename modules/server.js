@@ -32,18 +32,16 @@ exports.listServer = function (uid, cb){
     })
 };
 
-exports.getServerInfo = function (servername, cb){
-    var serverInfo = {
-        name: servername
-    };
-    Server.getServerByName(servername, function (err, server){
+exports.listAllServer = function (cb){
+  Server.getAllServer(cb);
+};
+
+exports.getServerInfo = function (sid, cb){
+    Server.getServerById(sid, function (err, server){
         if (err){
             return cb(err);
         } else {
-            serverInfo.host = server['host'];
-            serverInfo.port = server['port'];
-            serverInfo.path = server['path'];
-            serverInfo.file = server['file'];
+            var serverInfo = server.toObject();
             var isReturn = false;
             mcProtocol.ping({
                 host: server['host'],

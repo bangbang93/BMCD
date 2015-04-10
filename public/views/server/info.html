@@ -1,0 +1,71 @@
+<div class="container">
+  <table class="aui" id="server-status">
+    <tbody>
+    <tr>
+      <td class="server-status-key">
+        服务器名
+      </td>
+      <td>
+        {{server.name}}
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        服务器路径
+      </td>
+      <td>
+        {{server.path}}
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        服务器地址
+      </td>
+      <td>
+        {{server.host}}:{{server.port}}
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        当前在线玩家
+      </td>
+      <td>
+        {{server.playerCount}}
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        服务器状态
+      </td>
+      <td>
+        <span class="aui-lozenge aui-lozenge-default" ng-class="{'success': 'aui-lozenge-success', 'timed': 'aui-lozenge-complete', 'failed': 'aui-lozenge-error'}[server.status]">{{server.status}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        操作
+      </td>
+      <td>
+        <button class="aui-button aui-button-primary" id="server-control-start" style="display:none">开启</button>
+        <button class="aui-button aui-button-primary" id="server-control-stop" style="display:none">关闭</button>
+        <button class="aui-button aui-button-subtle" id="server-control-setting"><span class="aui-icon aui-icon-small aui-iconfont-configure">设置</span>设置</button>
+        <button class="aui-button aui-button-link" id="server-control-kill" style="display:none">强行关闭</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="server-status-key">
+        管理
+      </td>
+      <td>
+        <p class="aui-buttons">
+          <button class="aui-button" id="server-manager-mod">mod</button>
+          <button class="aui-button" id="server-manager-plugin">插件</button>
+          <button class="aui-button" id="server-manager-save">存档</button>
+          <button class="aui-button" id="server-manager-console">后台</button>
+        </p>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p>服务器探测功能暂时只支持1.7以上版本的服务器，1.7以下的服务器将显示超时，不影响其他功能</p>
+</div>
