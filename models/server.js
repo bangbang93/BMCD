@@ -7,7 +7,7 @@ var User = require('../model').User;
 exports.getServerByName = function (serverName, cb){
     Server.findOne({
         where:{
-            serverName: serverName
+            name: serverName
         }
     }).error(function (err){
         cb(err);
@@ -34,7 +34,7 @@ exports.getServerList = function (uid, cb){
 
 exports.addServer = function (data, cb){
     Server.create({
-        serverName: data.serverName,
+        name: data.serverName,
         host: data.host,
         port: data.port,
         path: data.path,

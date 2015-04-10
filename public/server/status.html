@@ -55,7 +55,7 @@
                         操作
                     </td>
                     <td>
-                        <button class="aui-button aui-button-primary" id="server-control-open" style="display:none">开启</button>
+                        <button class="aui-button aui-button-primary" id="server-control-start" style="display:none">开启</button>
                         <button class="aui-button aui-button-primary" id="server-control-stop" style="display:none">关闭</button>
                         <button class="aui-button aui-button-subtle" id="server-control-setting"><span class="aui-icon aui-icon-small aui-iconfont-configure">设置</span>设置</button>
                         <button class="aui-button aui-button-link" id="server-control-kill" style="display:none">强行关闭</button>
@@ -95,19 +95,19 @@
                 $('#server-control-stop, #server-control-kill').show();
             } else if (data['status'] == 'failed'){
                 $status.find('tr').eq(4).find('td').eq(1).html('<span class="aui-lozenge aui-lozenge-error">关闭</span>');
-                $('#server-control-open').show();
+                $('#server-control-start').show();
                 $('#server-control-stop, #server-control-kill').hide();
             } else {
                 $status.find('tr').eq(4).find('td').eq(1).html('<span class="aui-lozenge aui-lozenge-error">超时</span>');
                 $('#server-control-stop, #server-control-kill').show();
-                $('#server-control-open').show();
+                $('#server-control-start').show();
             }
         });
     };
     $(document).ready(function (){
         refreshServer();
         setInterval(refreshServer, 5000);
-        $('#server-control-open').on('click', function (){
+        $('#server-control-start').on('click', function (){
             $.get('/server/start/' + serverName);
         });
         $('#server-control-stop').on('click', function (){

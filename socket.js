@@ -9,6 +9,7 @@ var server = require('./modules/server');
 
 module.exports = function (app){
     io = socketIO(app);
+    global.io = io;
 
     io.use(function (socket, next){
         socket.session = parseSession(socket.request);

@@ -11,12 +11,12 @@ $(document).ready(function (){
                 if (window.location.pathname.indexOf('/admin') != 0){
                     var $servers = $('#servers');
                     data.forEach(function (server){
-                        $servers.append('<li><a class="server-list" target="frame" href="/server/status.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
+                        $servers.append('<li><a class="server-list" target="frame" href="/server/status.html?' + server.name + '#' + server.name + '" >' + server.name + '</a></li>')
                     })
                 } else {
                     var $serverList = $('#server-list');
                     data.forEach(function (server){
-                        $serverList.prepend('<li><a href="/admin/edit.html?' + server.serverName + '#' + server.serverName + '" >' + server.serverName + '</a></li>')
+                        $serverList.prepend('<li><a href="/admin/edit.html?' + server.name + '#' + server.name + '" >' + server.name + '</a></li>')
                     })
                 }
             }

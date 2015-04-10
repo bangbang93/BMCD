@@ -6,11 +6,21 @@ var fs = require('fs');
 var async = require('async');
 var path = require('path');
 var mcProtocol = require('minecraft-protocol');
+var manager = require('./manager');
 
 var Server = require('../models/server');
+var Config = require('../models/config');
 var Process = require('./process');
 
-global.servers = {};
+var setJava = function (){
+    Config.get('java', function (java){
+        if (!!java){
+            manager = manager(java);
+        }
+    });
+};
+
+setJava();
 
 exports.listServer = function (uid, cb){
     Server.getServerList(uid, function (err, result){
@@ -90,60 +100,34 @@ exports.createServer = function (serverName, host, port, path, file, cb){
 };
 
 exports.startServer = function (serverName, cb){
-    Server.getServerByName(serverName, function (err, server){
-        if (err){
-            return cb(err);
+    debug(manager);
+    if (!!manager){
+        if (manager.getServer(serverName)){
+            cb(null, manager.startServer(serverName));
         } else {
-            if (!!global.servers[serverName]){
-                return cb({
-                    errCode: 2,
-                    errMsg: 'Server Already Running'
-                });
-            } else {
-                try{
-                    var process = new Process(server.serverName, server.path, server.file);
-                    process.on('output', function (data){
-                        debug(data.toString());
-                    });
-                    global.servers[server.serverName] = process;
-                    process.start();
-                    return cb(null, process.pid);
-                } catch (err) {
-                    if (err.errCode == 1){
-                        return cb(err);
-                    }
+            Server.getServerByName(serverName, function (err, server){
+                if (err){
+                    return cb(err);
+                } else {
+                    console.log(server);
+                    server.opt = JSON.parse(server.opt);
+                    manager.addServer(server.name, server.path, server,file, server.opt);
+                    cb(null, manager.startServer(server.name));
                 }
-            }
+            })
         }
-    })
+    }
 };
 
 exports.stopServer = function (serverName, cb){
-    if (!!global.servers[serverName]){
-        var server = global.servers[serverName];
-        server.stop();
-        server.on('exit', function (){
-            delete global.servers[serverName];
-        });
-        cb();
-    } else {
-        cb({
-            errCode: 3,
-            errMsg: 'Server not Exist'
-        });
+    if (!!manager){
+        cb(null, manager.stopServer(serverName));
     }
 };
 
 exports.killServer = function (serverName, cb){
-    if (!!global.servers[serverName]){
-        var server = global.servers[serverName];
-        server.kill();
-        cb();
-    } else {
-        cb({
-            errCode: 3,
-            errMsg: 'Server not Exist'
-        });
+    if (!!manager){
+        cb(null, manager.killServer(serverName));
     }
 };
 
@@ -151,18 +135,6 @@ exports.io = function(socket, nsp){
     debug(socket.id + ' connect to /server');
     socket.on('init', function (data){
         debug(socket.id + ' in ' + data.server + ' console');
-        var server = global.servers[data.server];
-        if (!!server){
-            socket.emit('history', server.console);
-            server.on('output',function (data){
-                socket.emit('console', data.toString());
-            });
-            socket.on('command', function (data){
-                server.input(data);
-            })
-        } else {
-            server.disconnect();
-        }
-
+        socket.join(data.server);
     });
 };

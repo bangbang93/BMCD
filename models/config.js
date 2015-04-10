@@ -3,6 +3,12 @@
  */
 var Config = require('../model').Config;
 
+exports.get = function (key, cb){
+    exports.getAll(function (err, config){
+        cb(config[key]);
+    })
+};
+
 exports.getAll = function (cb){
     var config = {};
     Config.findAll({}).success(function (rows){
