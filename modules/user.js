@@ -25,17 +25,7 @@ exports.login = function (username, password, cb){
 };
 
 exports.listUser = function (cb){
-    var users = [];
-    User.listUser(function (rows){
-        rows.forEach(function (e){
-            users.push({
-                id: e.id,
-                username: e.username,
-                isAdmin: e.isAdmin
-            })
-        });
-        cb(users);
-    })
+    User.listUser(cb);
 };
 
 exports.changePassword = function (username, newPassword, cb){

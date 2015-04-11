@@ -10,7 +10,6 @@ var manager = require('./manager');
 
 var Server = require('../models/server');
 var Config = require('../models/config');
-var Process = require('./process');
 
 var setJava = function (){
     Config.get('java', function (java){
@@ -110,24 +109,8 @@ exports.createServer = function (serverName, host, port, path, file, cb){
     })
 };
 
-exports.startServer = function (serverName, cb){
-    debug(manager);
-    if (!!manager){
-        if (manager.getServer(serverName)){
-            cb(null, manager.startServer(serverName));
-        } else {
-            Server.getServerByName(serverName, function (err, server){
-                if (err){
-                    return cb(err);
-                } else {
-                    console.log(server);
-                    server.opt = JSON.parse(server.opt);
-                    manager.addServer(server.name, server.path, server,file, server.opt);
-                    cb(null, manager.startServer(server.name));
-                }
-            })
-        }
-    }
+exports.startServer = function (sid, cb){
+  manager.start(sid, cb);
 };
 
 exports.stopServer = function (serverName, cb){

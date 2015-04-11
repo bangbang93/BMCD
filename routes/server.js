@@ -48,12 +48,12 @@ router.get('/info/:sid', function (req, res){
     })
 });
 
-router.get('/start/:serverName', function (req, res){
-    var serverName = req.param('serverName');
-    if (!serverName){
+router.get('/start/:sid', function (req, res){
+    var sid = req.param('sid');
+    if (!sid){
         return res.send(400);
     }
-    Server.startServer(serverName, function (err, pid){
+    Server.startServer(sid, function (err, pid){
         if (err){
             if (err.errCode == 1){
                 return res.json(409, err);

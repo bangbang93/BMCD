@@ -3,11 +3,12 @@
  */
 var Process = require('./process');
 var Server = require('./server');
+var ServerModel = require('../models/server');
 var io = global.io;
 
 var serverPool = {};
 
-Server.listAllServer(function (err, servers){
+ServerModel.getAllServer(function (err, servers){
   if (err){
     throw err;
   } else {
@@ -26,10 +27,12 @@ exports.start = function (sid, cb){
     return cb('server does not exists');
   } else {
     server.startTime = new Date;
+    server.status = 'on';
     server.process.start();
     server.on('output', function (output){
       io.to(server._id).emit('output', output);
     });
+    server.on('exit', exitHandle(server._id));
     cb(null, server);
   }
 };
@@ -39,7 +42,6 @@ exports.stop = function (sid, cb){
   if (!server){
     return cb('server does not exists');
   } else {
-    server.startTime = 0;
     server.process.stop();
     server.removeAllListeners('output');
     cb(null, server);
@@ -51,7 +53,6 @@ exports.kill = function (sid, cb){
   if (!server){
     return cb('server does not exists');
   } else {
-    server.startTime = 0;
     server.process.kill();
     server.removeAllListeners('output');
     cb(null, server);
@@ -65,3 +66,13 @@ exports.getServer = function (sid, cb){
     return serverPool[sid];
   }
 };
+
+function exitHandle(sid){
+  return function (){
+    var server = serverPool[sid];
+    if (!!server){
+      server.startTime = 0;
+      server.status = 'off';
+    }
+  }
+}

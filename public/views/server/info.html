@@ -14,7 +14,7 @@
         服务器路径
       </td>
       <td>
-        {{server.path}}
+        {{server.path}}/{{server.file}}
       </td>
     </tr>
     <tr>
@@ -27,18 +27,18 @@
     </tr>
     <tr>
       <td class="server-status-key">
-        当前在线玩家
-      </td>
-      <td>
-        {{server.playerCount}}
-      </td>
-    </tr>
-    <tr>
-      <td class="server-status-key">
         服务器状态
       </td>
       <td>
-        <span class="aui-lozenge aui-lozenge-default" ng-class="{'success': 'aui-lozenge-success', 'timed': 'aui-lozenge-complete', 'failed': 'aui-lozenge-error'}[server.status]">{{server.statusName}}</span>
+        <span class="aui-lozenge aui-lozenge-default" ng-class="{'on': 'aui-lozenge-success', 'timed': 'aui-lozenge-complete', 'off': 'aui-lozenge-error'}[server.status]">{{server.statusName}}</span>
+      </td>
+    </tr>
+    <tr ng-show="server.startTime != 0">
+      <td class="server-status-key">
+        服务器启动时间
+      </td>
+      <td>
+        {{server.startTime}}
       </td>
     </tr>
     <tr>
@@ -46,7 +46,7 @@
         操作
       </td>
       <td>
-        <button class="aui-button aui-button-primary" id="server-control-start" ng-show="server.status == 'failed' || server.status == 'timed'">开启</button>
+        <button class="aui-button aui-button-primary" id="server-control-start" ng-click="start(server_sid)" ng-show="server.status == 'off' || server.status == 'timed'">开启</button>
         <button class="aui-button aui-button-primary" id="server-control-stop" ng-show="server.status == 'success'">关闭</button>
         <button class="aui-button aui-button-subtle" id="server-control-setting"><span class="aui-icon aui-icon-small aui-iconfont-configure">设置</span>设置</button>
         <button class="aui-button aui-button-link" id="server-control-kill">强行关闭</button>
