@@ -18,7 +18,6 @@ router.use(function (req, res, next) {
 });
 
 router.post('/server/create', function (req, res) {
-  var server = [];
   var name = req.param('name');
   var host = req.param('host');
   var port = req.param('port');
@@ -28,7 +27,7 @@ router.post('/server/create', function (req, res) {
   if (!name || !host || !port || !path || !file) {
     return res.send(400);
   }
-  Server.createServer(name, host, port, path, file, function (err, success) {
+  Server.createServer(name, host, port, path, file, args, function (err) {
     if (err) {
       if (err.errno == 34) {
         res.send(404);
