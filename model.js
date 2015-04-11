@@ -10,7 +10,7 @@ mongoose.connect('mongodb://' + Config.db.host + '/' + Config.db.db);
 
 var ConfigSchema = new mongoose.Schema({
   key: String,
-  value: String
+  value: Mixed
 });
 
 var UserSchema = new mongoose.Schema({

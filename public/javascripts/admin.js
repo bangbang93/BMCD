@@ -10,11 +10,15 @@ var app = angular.module('adminApp', ['ngAnimate', 'ngRoute']).config(function (
     .when('/server/config/:sid',{
     templateUrl: 'views/server-config.html',
     controller: 'ServerConfigCtrl'
-})
+  })
     .when('/server/create/',{
     templateUrl: 'views/server-config.html',
     controller: 'ServerCreateCtrl'
   })
+    .when('/config', {
+      templateUrl: 'views/config.html',
+      controller: 'ConfigCtrl'
+    })
     .otherwise({
     redirectTo: '/'
   });
@@ -42,4 +46,6 @@ app.factory('secondToDate', function () {
     }
     return time;
   }
+}).factory('AJS', function (){
+  return AJS;
 });

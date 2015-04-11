@@ -35,7 +35,7 @@
             <button class="aui-button" ng-click="delArg()">删除</button>
           </div>
           <div class="field-group">
-            <button class="aui-button aui-button-primary" type="submit">创建</button>
+            <button class="aui-button aui-button-primary" type="submit" ng-disabled="!canCreate">创建</button>
             <button class="aui-button aui-button-subtle" type="reset">清空</button>
           </div>
         </form>
@@ -43,3 +43,16 @@
     </div>
   </div>
 </div>
+<section role="dialog" id="returnDialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+  <header class="aui-dialog2-header">
+    <h2 class="aui-dialog2-header-main">{{dialog.title}}</h2>
+    <a class="aui-dialog2-header-close" href="">
+      <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">关闭</span>
+    </a>
+  </header>
+  <div class="aui-dialog2-content">
+    {{dialog.content}}
+  </div>
+  <footer class="aui-dialog2-footer">
+  </footer>
+</section>

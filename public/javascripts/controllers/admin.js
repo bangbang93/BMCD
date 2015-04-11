@@ -50,10 +50,37 @@ angular.module('adminApp')
     $scope.server.args.splice(i, 1);
   }
 })
-  .controller('ServerCreateCtrl', function ($scope, $http){
-  $scope.$emit('changeTitle', '创建服务器');
-  $scope.server = {};
-  $scope.submit = function (){
-    console.log($scope.server);
-  }
-});
+  .controller('ServerCreateCtrl', function ($scope, $http, AJS, $window){
+    $scope.canCreate = true;
+    $scope.$emit('changeTitle', '创建服务器');
+    $scope.server = {};
+    $scope.submit = function (){
+      $scope.canCreate = false;
+      $http.post('/admin/server/create', $scope.server).success(function (){
+        $scope.dialog = {
+          title: '创建成功',
+          content: '创建服务器' + $scope.server.name + '成功'
+        };
+        AJS.dialog2('#returnDialog').show().on('hide', function (){
+          $window.location.refresh();
+        });
+      }).error(function (data, status){
+        if (status == 404){
+          $scope.dialog = {
+            title: '创建失败',
+            content: '创建服务器' + $scope.server.name + '失败，由于输入的路径不存在'
+          };
+        } else {
+          $scope.dialog = {
+            title: '创建失败',
+            content: '创建服务器' + $scope.server.name + '失败，由于服务器内部错误：' + JSON.stringify(data)
+          };
+        }
+        AJS.dialog2('#returnDialog').show();
+        $scope.canCreate = true;
+      })
+    }
+})
+  .controller('ConfigCtrl', function ($scope, $http){
+
+  });
