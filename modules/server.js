@@ -36,7 +36,7 @@ exports.listAllServer = function (cb){
   Server.getAllServer(cb);
 };
 
-exports.getServerInfo = function (sid, cb){
+exports.getServerStatus = function (sid, cb){
     Server.getServerById(sid, function (err, server){
         if (err){
             return cb(err);
@@ -58,8 +58,10 @@ exports.getServerInfo = function (sid, cb){
                     serverInfo.version = result.version;
                     serverInfo.status = 'success'
                 }
-                cb(null, serverInfo);
-                isReturn = true;
+                if (!isReturn){
+                  cb(null, serverInfo);
+                  isReturn = true;
+                }
             });
             setTimeout(function (){
                 if (!isReturn){
@@ -69,10 +71,21 @@ exports.getServerInfo = function (sid, cb){
                     serverInfo.version = '0.0';
                     serverInfo.status = 'timed';
                     cb(null, serverInfo);
+                    isReturn = true;
                 }
             }, 5000);
         }
     })
+};
+
+exports.getServerInfo = function (sid, cb){
+  Server.getServerById(sid, function (err, server){
+    if (err){
+      return cb(err);
+    } else {
+      cb(null, manager.getServer(sid));
+    }
+  })
 };
 
 exports.createServer = function (serverName, host, port, path, file, cb){
