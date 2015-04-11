@@ -3,9 +3,17 @@
   <div class="aui-page-panel-inner">
     <div class="aui-page-panel-nav">
       <section>
-        <form class="aui" action="" method="post" id="configure" onsubmit="return false;">
+        <form class="aui" action="" method="post" id="configure" onsubmit="return false;" ng-submit="submit()">
           <div class="field-group">
-            <label for="java">java</label><input id="java" type="text" name="java" class="long-field text"/>
+            <label for="java">java</label>
+            <select name="java" id="java" class="multi-select" multiple size="1" ng-model="nowJava">
+              <option value="{{path}}" ng-repeat="path in java">{{path}}</option>
+            </select>
+            <div>
+              <input type="text" class="text" ng-model="newJava"/>
+              <button class="aui-button aui-button-primary" ng-click="addJava()" type="button">添加</button>
+              <button class="aui-button aui-button-subtle" ng-click="delJava()" type="button">删除</button>
+            </div>
           </div>
           <div class="button-container">
             <div class="buttons">
@@ -18,3 +26,19 @@
     </div>
   </div>
 </div>
+<section role="dialog" id="returnDialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+  <header class="aui-dialog2-header">
+    <h2 class="aui-dialog2-header-main">{{dialog.title}}</h2>
+    <a class="aui-dialog2-header-close" href="">
+      <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">关闭</span>
+    </a>
+  </header>
+  <div class="aui-dialog2-content">
+    {{dialog.content}}
+  </div>
+  <footer class="aui-dialog2-footer">
+    <div class="aui-dialog2-footer-actions">
+      <button id="dialog-close-button" class="aui-button aui-button-link">关闭</button>
+    </div>
+  </footer>
+</section>

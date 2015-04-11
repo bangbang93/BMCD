@@ -28,11 +28,11 @@
             <select ng-model="nowArg" name="args" id="args" class="multi-select" multiple="1">
               <option value="{{arg}}" ng-repeat="arg in server.args">{{arg}}</option>
             </select>
-            <br/>
-            <br/>
-            <input id="newArg" ng-model="newArg" type="text" class="text"/>
-            <button class="aui-button aui-button-primary" ng-click="addArg()">添加</button>
-            <button class="aui-button" ng-click="delArg()">删除</button>
+            <div>
+              <input id="newArg" ng-model="newArg" type="text" class="text"/>
+              <button class="aui-button aui-button-primary" ng-click="addArg()">添加</button>
+              <button class="aui-button" ng-click="delArg()">删除</button>
+            </div>
           </div>
           <div class="field-group">
             <button class="aui-button aui-button-primary" type="submit" ng-disabled="!canCreate">创建</button>

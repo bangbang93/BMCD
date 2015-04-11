@@ -3,17 +3,18 @@
  */
 angular.module('adminApp')
   .controller('IndexCtrl', function ($scope, $http, secondToDate){
-  $http.get('/admin/status').success(function (data){
-    $scope.bmcd = data;
-    $scope.bmcd.upDate = secondToDate(data.uptime);
-  })
+    $scope.$emit('changeTitle', 'BMCD');
+    $http.get('/admin/status').success(function (data){
+      $scope.bmcd = data;
+      $scope.bmcd.upDate = secondToDate(data.uptime);
+    })
 })
   .controller('NavCtrl', function ($scope, $http, $route){
   $http.get('/server/list').success(function (data){
     $scope.servers = data;
   });
   $scope.$on('$routeChangeSuccess', function (ev, current, prev){
-    console.log(current);
+
   });
 })
   .controller('HeaderCtrl', function ($scope){
@@ -62,7 +63,7 @@ angular.module('adminApp')
           content: '创建服务器' + $scope.server.name + '成功'
         };
         AJS.dialog2('#returnDialog').show().on('hide', function (){
-          $window.location.refresh();
+          $window.location.reload();
         });
       }).error(function (data, status){
         if (status == 404){
@@ -81,6 +82,42 @@ angular.module('adminApp')
       })
     }
 })
-  .controller('ConfigCtrl', function ($scope, $http){
-
+  .controller('ConfigCtrl', function ($scope, $http, AJS, $window){
+    $scope.newJava = '';
+    $scope.nowJava = '';
+    $scope.$emit('changeTitle', 'BMCD参数设置');
+    $http.get('/admin/configure').success(function (data){
+      data.forEach(function (e){
+        $scope[e.key] = e.value;
+      });
+    });
+    $scope.addJava = function (){
+      if (!$scope.newJava){
+        return;
+      }
+      $scope['java'].push($scope.newJava);
+      $scope.newJava = '';
+    };
+    $scope.delJava = function (){
+      var java = $scope['java'];
+      for(var i in java){
+        if (java[i] == $scope.nowJava){
+          break;
+        }
+      }
+      java.splice(i,1);
+    };
+    $scope.submit = function (){
+      $http.post('/admin/configure', {
+        java: $scope.java
+      }).success(function (data){
+        $scope.dialog = {
+          title: '保存配置',
+          content: '成功'
+        };
+        AJS.dialog2('#returnDialog').show().on('hide', function (){
+          $window.location.reload();
+        });
+      })
+    }
   });

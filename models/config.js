@@ -18,7 +18,7 @@ exports.set = function (key, value, cb){
       key: key
     }, {
       value: value
-    }, function (doc, err){
+    }, function (err, doc){
       if (!doc){
         doc = new Config;
         doc.key = key;

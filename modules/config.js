@@ -21,7 +21,6 @@ exports.getAll = function (cb){
         cb = function (){};
     }
     Config.getAll(function (err, config){
-        console.log(config);
         cb(err, config);
     })
 };

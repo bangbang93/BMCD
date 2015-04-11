@@ -52,6 +52,17 @@ router.get('/configure', function (req, res) {
   })
 });
 
+router.get('/configure/:name', function (req, res) {
+  var name = req.param('name');
+  Config.get(name, function (err, config){
+    if (err){
+      res.status(500).json(err);
+    } else {
+      res.json(config);
+    }
+  })
+});
+
 router.get('/status', function (req, res) {
   res.json({
     uptime: process.uptime(),
