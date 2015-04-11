@@ -32,6 +32,7 @@ var ServerSchema = new mongoose.Schema({
   port: Number,
   path: String,
   file: String,
+  args: [String],
   opt: Mixed
 });
 
