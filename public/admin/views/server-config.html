@@ -2,35 +2,41 @@
   <div class="aui-page-panel-inner">
     <div class="aui-page-panel-nav">
       <section>
-        <form action="" class="aui" ng-submit="false" onsubmit="return false;">
+        <form action="" class="aui" ng-submit="submit()" onsubmit="return false;">
           <div class="field-group">
             <label for="name">服务器名称</label>
-            <input id="name" type="text" ng-model="server.name" class="text"/>
+            <input id="name" type="text" ng-model="server.name" class="text" required=""/>
           </div>
           <div class="field-group">
             <label for="host">服务器地址</label>
-            <input id="host" ng-model="server.host" type="text" class="text"/>
+            <input id="host" ng-model="server.host" type="text" class="text" required=""/>
           </div>
           <div class="field-group">
             <label for="port">服务器端口</label>
-            <input id="port" ng-model="server.port" type="number" class="text"/>
+            <input id="port" ng-model="server.port" type="number" class="text" required=""/>
           </div>
           <div class="field-group">
             <label for="path">服务器路径</label>
-            <input id="path" ng-model="server.path" type="text" class="text"/>
+            <input id="path" ng-model="server.path" type="text" class="text" required=""/>
           </div>
           <div class="field-group">
             <label for="file">服务器文件</label>
-            <input id="file" ng-model="server.file" type="text" class="text"/>
+            <input id="file" ng-model="server.file" type="text" class="text" required=""/>
           </div>
           <div class="field-group">
             <label for="args">启动参数</label>
             <select ng-model="nowArg" name="args" id="args" class="multi-select" multiple="1">
               <option value="{{arg}}" ng-repeat="arg in server.args">{{arg}}</option>
             </select>
+            <br/>
+            <br/>
             <input id="newArg" ng-model="newArg" type="text" class="text"/>
             <button class="aui-button aui-button-primary" ng-click="addArg()">添加</button>
             <button class="aui-button" ng-click="delArg()">删除</button>
+          </div>
+          <div class="field-group">
+            <button class="aui-button aui-button-primary" type="submit">创建</button>
+            <button class="aui-button aui-button-subtle" type="reset">清空</button>
           </div>
         </form>
       </section>

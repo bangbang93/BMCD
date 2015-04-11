@@ -2,13 +2,20 @@
  * Created by bangbang93 on 15-4-11.
  */
 var app = angular.module('adminApp', ['ngAnimate', 'ngRoute']).config(function ($routeProvider){
-  $routeProvider.when('/', {
+  $routeProvider
+    .when('/', {
     templateUrl: 'views/index.html',
     controller: 'IndexCtrl'
-  }).when('/admin/server/config/:sid',{
+  })
+    .when('/server/config/:sid',{
     templateUrl: 'views/server-config.html',
     controller: 'ServerConfigCtrl'
-}).otherwise({
+})
+    .when('/server/create/',{
+    templateUrl: 'views/server-config.html',
+    controller: 'ServerCreateCtrl'
+  })
+    .otherwise({
     redirectTo: '/'
   });
 });

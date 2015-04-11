@@ -19,19 +19,19 @@
 
     <header id="header" role="banner">
         <nav class="aui-header aui-dropdown2-trigger-group" role="navigation">
-            <div class="aui-header-primary">
+            <div class="aui-header-primary" ng-controller="NavCtrl">
                 <h1 id="logo" class="aui-header-logo"><a href="#"><span class="aui-header-logo-device">BMCD</span></a></h1>
                 <ul class="aui-nav">
                     <li><a href="" aria-owns="dropdown2-jira1" aria-haspopup="true" class="aui-dropdown2-trigger" aria-controls="dropdown2-header7">服务器管理<span class="aui-icon-dropdown"></span></a>
                         <div class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" id="dropdown2-jira1" style="display: none; top: 40px; min-width: 160px; left: 1213px; " aria-hidden="true">
-                            <div class="aui-dropdown2-section" ng-controller="ServerCtrl">
+                            <div class="aui-dropdown2-section">
                                 <ul id="server-list">
                                   <li ng-repeat="server in servers"><a
-                                    ng-href="#/admin/server/config/{{server._id}}">{{server.name}}</a></li>
+                                    ng-href="#/server/config/{{server._id}}">{{server.name}}</a></li>
                                 </ul>
                               <hr/>
                                 <ul>
-                                  <li><a ng-href="#/admin/server/create">创建</a></li>
+                                  <li><a ng-href="#/server/create/">创建</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -73,15 +73,15 @@
             </div>
         </nav>
     </header>
-    <section id="content">
+    <section id="content" ng-controller="HeaderCtrl">
         <header class="aui-page-header">
             <div class="aui-page-header-inner">
                 <div class="aui-page-header-main">
                     <ol class="aui-nav aui-nav-breadcrumbs">
                         <li><a href="/">BMCD</a> </li>
-                        <li class="aui-nav-selected"><a href="/admin">后台</a> </li>
+                        <li class="aui-nav-selected"><a href="#/">后台</a> </li>
                     </ol>
-                    <h1>BMCD服务器管理</h1>
+                    <h1>{{title || 'BMCD服务器管理'}}</h1>
                 </div>
             </div>
         </header>

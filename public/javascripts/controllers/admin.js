@@ -1,16 +1,27 @@
 /**
  * Created by bangbang93 on 15-4-11.
  */
-angular.module('adminApp').controller('IndexCtrl', function ($scope, $http, secondToDate){
+angular.module('adminApp')
+  .controller('IndexCtrl', function ($scope, $http, secondToDate){
   $http.get('/admin/status').success(function (data){
     $scope.bmcd = data;
     $scope.bmcd.upDate = secondToDate(data.uptime);
   })
-}).controller('ServerCtrl', function ($scope, $http){
+})
+  .controller('NavCtrl', function ($scope, $http, $route){
   $http.get('/server/list').success(function (data){
     $scope.servers = data;
+  });
+  $scope.$on('$routeChangeSuccess', function (ev, current, prev){
+    console.log(current);
+  });
+})
+  .controller('HeaderCtrl', function ($scope){
+  $scope.$on('changeTitle', function (e, title){
+    $scope.title = title;
   })
-}).controller('ServerConfigCtrl', function ($scope, $http, $route){
+})
+  .controller('ServerConfigCtrl', function ($scope, $http, $route){
   $scope.newArg = '';
   $scope.nowArg = '';
   $scope.$on('$routeChangeSuccess', function (ev, current, prev){
@@ -37,5 +48,12 @@ angular.module('adminApp').controller('IndexCtrl', function ($scope, $http, seco
       }
     }
     $scope.server.args.splice(i, 1);
+  }
+})
+  .controller('ServerCreateCtrl', function ($scope, $http){
+  $scope.$emit('changeTitle', '创建服务器');
+  $scope.server = {};
+  $scope.submit = function (){
+    console.log($scope.server);
   }
 });
