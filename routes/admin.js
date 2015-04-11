@@ -18,25 +18,27 @@ router.use(function (req, res, next){
 });
 
 router.post('/server/create', function (req, res){
-    var serverName = req.param('serverName');
-    var host = req.param('host');
-    var port = req.param('port');
-    var path = req.param('path');
-    var file = req.param('file');
-    if (!serverName || !host || !port || !path || !file){
-        return res.send(400);
+  var server = [];
+  var name = req.param('name');
+  var host = req.param('host');
+  var port = req.param('port');
+  var path = req.param('path');
+  var file = req.param('file');
+  var args = req.param('args') || [];
+  if (!name || !host || !port || !path || !file){
+    return res.send(400);
+  }
+  Server.createServer(name, host, port, path, file, function (err, success){
+    if (err){
+      if (err.errno == 34){
+        res.send(404);
+      } else {
+        res.json(500, err);
+      }
+    } else {
+        res.send(204);
     }
-    Server.createServer(serverName, host, port, path, file, function (err, success){
-        if (err){
-            if (err.errno == 34){
-                res.send(404);
-            } else {
-                res.json(500, err);
-            }
-        } else {
-            res.send(204);
-        }
-    })
+  })
 });
 
 router.post('/configure', function (req, res){

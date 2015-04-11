@@ -27,7 +27,7 @@ exports.getAllServer = function (cb){
 
 exports.addServer = function (data, cb){
     var server = new Server({
-      name: data.serverName,
+      name: data.name,
       host: data.host,
       port: data.port,
       path: data.path,

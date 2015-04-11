@@ -66,7 +66,7 @@ router.get('/start/:sid', function (req, res){
     });
 });
 
-router.get('/stop/:serverName', function (req, res){
+router.get('/stop/:name', function (req, res){
     var serverName = req.param('serverName');
     if (!serverName){
         return res.send(400);
@@ -84,7 +84,7 @@ router.get('/stop/:serverName', function (req, res){
     });
 });
 
-router.get('/kill/:serverName', function (req, res){
+router.get('/kill/:name', function (req, res){
     var serverName = req.param('serverName');
     if (!serverName){
         return res.send(400);

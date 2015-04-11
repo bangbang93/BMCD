@@ -165,7 +165,7 @@
             var $file = $('#file');
             $.ajax('/admin/server/edit/' + $serverName.val() ,{
                 data: {
-                    serverName: $serverName.html(),
+                    name: $serverName.html(),
                     host: $host.val(),
                     port: $port.val(),
                     path: $path.val(),
