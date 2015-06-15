@@ -32,9 +32,15 @@ app.use(function (req, res, next){
     next();
 });
 
-app.use('/user', user);
-app.use('/server', server);
-app.use('/admin', admin);
+(function loadRoute(){
+    var files = fs.readdirSync('routes');
+    files.forEach(function (e) {
+        if (e.match(/\.js$/i)){
+            app.use('/' + path.basename(e, path.extname(e)) //route url
+              , require(path.join(path.join(__dirname, 'routes'), e)));
+        }
+    })
+})();
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
