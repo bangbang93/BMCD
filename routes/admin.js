@@ -66,8 +66,8 @@ router.get('/configure/:name', function (req, res) {
 router.get('/status', function (req, res) {
   res.json({
     uptime: process.uptime(),
-    uid: process.getuid(),
-    gid: process.getgid(),
+    uid: (process.getuid && process.getuid()) || 0,
+    gid: (process.getgid && process.getgid()) || 0,
     arch: process.arch,
     platform: process.platform,
     memoryUsage: process.memoryUsage()
