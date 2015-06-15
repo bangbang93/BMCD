@@ -2,6 +2,7 @@
  * Created by bangbang93 on 14-10-24.
  */
 var User = require('../models/user');
+var md5 = require('../lib/md5');
 
 exports.login = function (username, password, cb){
     User.getUserByName(username, function (err, user){
@@ -9,7 +10,7 @@ exports.login = function (username, password, cb){
             cb(err);
         } else {
             if (!!user){
-                if (user['password'] == password){
+                if (user['password'] == md5(username + password)){
                     cb(null, {
                         uid: user['id'],
                         isAdmin: user['isAdmin']
@@ -38,4 +39,8 @@ exports.changePassword = function (username, newPassword, cb){
             cb();
         }
     })
+};
+
+exports.addUser = function (username, password) {
+    User.addUser(username, md5(username + password), cb);
 };

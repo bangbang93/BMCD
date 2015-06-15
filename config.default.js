@@ -9,5 +9,9 @@ module.exports = {
         admin: "admin"
     },
     serverDirectory:'../server',
-    port:'25560'
+    port:'25560',
+    db: {
+        host: 'localhost',
+        db: 'bmcd'
+    }
 };
