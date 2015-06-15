@@ -35,7 +35,7 @@ router.get('/list', function (req, res){
 });
 
 router.get('/info/:sid', function (req, res){
-    var sid = req.param('sid');
+    var sid = req.params['sid'];
     if (!sid){
         return res.send(400);
     }
@@ -48,8 +48,22 @@ router.get('/info/:sid', function (req, res){
     })
 });
 
+router.get('/status/:sid', function (req, res, next) {
+    var sid = req.params['sid'];
+    if (!sid){
+        return res.status(400).end();
+    }
+    Server.getServerStatus(sid, function (err, result) {
+        if(err){
+            next(err);
+        } else {
+            res.json(result);
+        }
+    })
+});
+
 router.get('/start/:sid', function (req, res){
-    var sid = req.param('sid');
+    var sid = req.params['sid'];
     if (!sid){
         return res.send(400);
     }
@@ -61,13 +75,13 @@ router.get('/start/:sid', function (req, res){
                 return res.json(500, err);
             }
         } else {
-            res.send(200, pid);
+            res.send(pid);
         }
     });
 });
 
 router.get('/stop/:name', function (req, res){
-    var serverName = req.param('serverName');
+    var serverName = req.params['serverName'];
     if (!serverName){
         return res.send(400);
     }
@@ -85,7 +99,7 @@ router.get('/stop/:name', function (req, res){
 });
 
 router.get('/kill/:name', function (req, res){
-    var serverName = req.param('serverName');
+    var serverName = req.params['serverName'];
     if (!serverName){
         return res.send(400);
     }
