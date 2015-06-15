@@ -30,3 +30,20 @@ exports.set = function (key, value, cb){
     })
 };
 
+Config.count({}, function (err, count) {
+  if (count == 0){
+    var config = new Config;
+    config.key = 'java';
+    config.value = [];
+    config.save(initError);
+  }
+});
+
+function initError(err){
+  if (err){
+    console.error('初始化设置失败');
+    throw err;
+  } else {
+    console.log('初始化设置成功');
+  }
+}
