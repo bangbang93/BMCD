@@ -18,3 +18,11 @@ if (process.env.NODE_ENV != 'development'){
         console.log('crash:' + (typeof err === 'string')?err:JSON.stringify(err));
     });
 }
+
+var io = require('socket.io')(server);
+global.io = io;
+io.on('connection', function (socket) {
+  socket.on('getServerConsole', function (data) {
+    socket.join(data['sid']);
+  })
+});
