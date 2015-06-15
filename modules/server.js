@@ -78,13 +78,7 @@ exports.getServerStatus = function (sid, cb) {
 };
 
 exports.getServerInfo = function (sid, cb) {
-  Server.getServerById(sid, function (err, server) {
-    if (err) {
-      return cb(err);
-    } else {
-      cb(null, manager.getServer(sid));
-    }
-  })
+  Server.getServerById(sid, cb);
 };
 
 exports.createServer = function (name, host, port, path, file, args, cb) {
