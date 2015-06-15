@@ -5,7 +5,6 @@ var Process = require('./process');
 var Server = require('../models/server');
 var async = require('async');
 var Q = require('q');
-var io = global.io;
 
 var serverPool = {};
 
@@ -39,9 +38,9 @@ exports.start = function (sid, cb){
       } else{
         server.startTime = new Date;
         server.status = 'on';
-        server.process.start();
+        server.process.start(new Function);
         server.process.on('output', function (output){
-          io.to(server._id).emit('output', output);
+          global.io.to(server._id).emit('output', output);
         });
         server.process.on('exit', exitHandle(server._id));
         cb(null, server);

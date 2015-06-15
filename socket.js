@@ -2,27 +2,29 @@
  * Created by bangbang93 on 14-11-2.
  */
 var Config = require('./config');
-var socketIO = require('socket.io');
+var io = require('socket.io');
 var session = require('cookie-session')(Config.session);
-var io;
-
-var server = require('./modules/server');
+var debug = require('debug')('BMCD:socket');
 
 module.exports = function (app){
-    io = socketIO(app);
-    global.io = io;
+  io = io(app);
 
-    io.use(function (socket, next){
-        socket.session = parseSession(socket.request);
-        next();
-    });
+  io.use(function (socket, next){
+      socket.session = parseSession(socket.request);
+      next();
+  });
 
-    io.use(checkLogin);
+  io.use(checkLogin);
 
-    var serverNSP = io.of('/server');
-    serverNSP.on('connection', function (socket){
-        server.io(socket, serverNSP);
-    })
+  var serverNSP = io.of('/server');
+  serverNSP.on('connection', function (socket){
+      debug(socket.id + ' connect to /server');
+      socket.on('getServerConsole', function (data) {
+          debug(socket.id + ' in ' + data.server + ' console');
+          socket.join(data.server);
+      });
+  });
+  return io;
 };
 
 var parseSession = function (req){

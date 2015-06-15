@@ -29,23 +29,5 @@ angular
       });
   })
   .factory('io', function ($rootScope) {
-    var socket = io.connect();
-    return {
-      on: function (event, cb) {
-        socket.on(event, function () {
-          var args = arguments;
-          $rootScope.$apply(function () {
-            cb.apply(socket, args);
-          })
-        })
-      },
-      emit: function (event, data, cb) {
-        socket.emit(event, data, function () {
-          var args = arguments;
-          $rootScope.$apply(function () {
-            cb&&cb.apply(socket, args);
-          })
-        })
-      }
-    }
+    return io;
   });

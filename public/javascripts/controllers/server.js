@@ -34,13 +34,25 @@ angular.module('bmcdApp')
     })
   }
 })
-  .controller('ServerConsoleCtrl', function ($scope, $http, $route) {
-    var server = window.location.hash.substr(1);
+  .controller('ServerConsoleCtrl', function ($scope, $http, $route, io) {
     var socket = io('/server');
-    socket.on('connect', function (){
-      socket.emit('init', {
-        server: server
+    $scope.$on('$routeChangeSuccess', function (ev, current, prev) {
+      socket.emit('getServerConsole', {
+        server: current.params.sid
       })
+    });
+    socket.on('console', function (data){
+      console.log(data);
+      $scope.console.append(data);
+      //textareaConsole.scrollTop = textareaConsole.scrollHeight;
+    });
+    socket.on('history', function (data){
+      var str = '';
+      data.forEach(function (e){
+        str += data;
+      });
+      $scope.console.append(str);
+      //textareaConsole.scrollTop = textareaConsole.scrollHeight;
     });
     $(document).ready(function (){
       var $command = $('#command');
@@ -60,18 +72,6 @@ angular.module('bmcdApp')
         if (key.which == 13){
           $submit.click();
         }
-      });
-      socket.on('console', function (data){
-        $console.append(data);
-        textareaConsole.scrollTop = textareaConsole.scrollHeight;
-      });
-      socket.on('history', function (data){
-        var str = '';
-        data.forEach(function (e){
-          str += data;
-        });
-        $console.append(str);
-        textareaConsole.scrollTop = textareaConsole.scrollHeight;
       });
     })
   })

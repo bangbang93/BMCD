@@ -1,7 +1,7 @@
 /**
  * Created by bangbang93 on 14-8-20.
  */
-var debug = require('debug')('BMCD');
+var debug = require('debug')('BMCD:server');
 var fs = require('fs');
 var async = require('async');
 var path = require('path');
@@ -132,12 +132,4 @@ exports.killServer = function (serverName, cb) {
   if (!!manager) {
     cb(null, manager.killServer(serverName));
   }
-};
-
-exports.io = function (socket, nsp) {
-  debug(socket.id + ' connect to /server');
-  socket.on('init', function (data) {
-    debug(socket.id + ' in ' + data.server + ' console');
-    socket.join(data.server);
-  });
 };

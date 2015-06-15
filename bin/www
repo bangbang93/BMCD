@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var debug = require('debug')('BMCD');
+var debug = require('debug')('BMCD:www');
 var path = require('path');
 
 var app = require('../app');
@@ -19,10 +19,4 @@ if (process.env.NODE_ENV != 'development'){
     });
 }
 
-var io = require('socket.io')(server);
-global.io = io;
-io.on('connection', function (socket) {
-  socket.on('getServerConsole', function (data) {
-    socket.join(data['sid']);
-  })
-});
+global.io = socket;
