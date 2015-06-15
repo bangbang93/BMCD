@@ -35,7 +35,13 @@
             </div>
           </div>
           <div class="field-group">
-            <button class="aui-button aui-button-primary" type="submit" ng-disabled="!canCreate">创建</button>
+            <label for="java">Java</label>
+            <select name="java" id="java" ng-model="server.java" class="multi-select">
+              <option value="{{java}}" ng-repeat="java in java">{{java}}</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <button class="aui-button aui-button-primary" type="submit" ng-disabled="!canCreate">保存</button>
             <button class="aui-button aui-button-subtle" type="reset">清空</button>
           </div>
         </form>

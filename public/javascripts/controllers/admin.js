@@ -9,22 +9,33 @@ angular.module('adminApp')
       $scope.bmcd.upDate = secondToDate(data.uptime);
     })
 })
-  .controller('NavCtrl', function ($scope, $http, $route){
+  .controller('HeaderCtrl', function ($scope, $http, $route){
   $http.get('/server/list').success(function (data){
     $scope.servers = data;
+  });
+  $http.get('/user/status').success(function (data) {
+    $scope.username = data.username;
   });
   $scope.$on('$routeChangeSuccess', function (ev, current, prev){
 
   });
 })
-  .controller('HeaderCtrl', function ($scope){
+  .controller('TitleCtrl', function ($scope, $http){
   $scope.$on('changeTitle', function (e, title){
     $scope.title = title;
-  })
+  });
 })
   .controller('ServerConfigCtrl', function ($scope, $http, $route){
   $scope.newArg = '';
   $scope.nowArg = '';
+    $scope.canCreate = true;
+  $http.get('/admin/configure').success(function (data) {
+    data.forEach(function (e) {
+      if (e.key == 'java'){
+        $scope.java = e.value;
+      }
+    })
+  });
   $scope.$on('$routeChangeSuccess', function (ev, current, prev){
     var sid = current.params.sid;
     $http.get('/server/info/' + sid).success(function (data){
@@ -49,12 +60,34 @@ angular.module('adminApp')
       }
     }
     $scope.server.args.splice(i, 1);
-  }
+  };
+    $scope.submit = function (){
+      $scope.canCreate = false;
+      $http.post('/admin/server/edit', $scope.server).success(function (){
+        $scope.dialog = {
+          title: '保存成功',
+          content: '保存服务器' + $scope.server.name + '成功'
+        };
+        AJS.dialog2('#returnDialog').show().on('hide', function (){
+          $window.location.reload();
+        });
+      }).error(function (data, status){
+        $scope.dialog = {
+          title: '创建失败',
+          content: '创建服务器' + $scope.server.name + '失败，由于服务器内部错误：' + JSON.stringify(data)
+        };
+        AJS.dialog2('#returnDialog').show();
+        $scope.canCreate = true;
+      })
+    }
 })
   .controller('ServerCreateCtrl', function ($scope, $http, AJS, $window){
     $scope.canCreate = true;
     $scope.$emit('changeTitle', '创建服务器');
     $scope.server = {};
+    $http.get('/admin/configure').success(function (data) {
+      $scope.java = data.java;
+    });
     $scope.submit = function (){
       $scope.canCreate = false;
       $http.post('/admin/server/create', $scope.server).success(function (){
@@ -95,7 +128,7 @@ angular.module('adminApp')
       if (!$scope.newJava){
         return;
       }
-      $scope['java'].push($scope.newJava);
+      $scope.java.push($scope.newJava);
       $scope.newJava = '';
     };
     $scope.delJava = function (){
