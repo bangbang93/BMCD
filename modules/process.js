@@ -20,51 +20,40 @@ var BMCDLauncher = function(name, serverPath, jarFile, options){
     this.name = name;
     this.path = serverPath;
     this.options = options || {};
+    this.java = this.options.java;
     this.args = ['-jar', path.join(serverPath, jarFile), '--nojline'];
+    this.args = this.args.concat(options.opts);
 };
 
 util.inherits(BMCDLauncher, events.EventEmitter);
 
-BMCDLauncher.prototype.start = function (){
+BMCDLauncher.prototype.start = function (cb){
     var that = this;
-    Config.get('java', function (err, value){
-        if (err){
-            throw err;
-        } else {
-            that.java = value;
-            if (!that.java){
-                throw {
-                    errCode: 1,
-                    errMessage: 'No Java Configure'
-                };
-            }
-            that.server = spawn(that.java, that.args,{
-                cwd: that.path
-            });
-            that.stdin = that.server.stdin;
-            that.stdout = that.server.stdout;
-            that.stderr = that.server.stderr;
-            that.stdout.on('data', function (data){
-                that.emit('stdout', data);
-                that.emit('output', data);
-                that.output(data.toString());
-            });
-            that.stderr.on('data', function (data){
-                that.emit('stderr', data);
-                that.emit('output', data);
-                that.output(data.toString());
-            });
-            that.server.on('exit', function (code, signal){
-                console.log(that.name + ' exit:' + code + ' ' + signal);
-                that.emit('exit', code, signal);
-            });
-            that.server.on('error', function (err){
-                console.log(JSON.parse(err));
-            });
-
-            that.pid = that.server.pid;
-        }
+    that.server = spawn(that.java, that.args,{
+        cwd: that.path
     });
+    that.stdin = that.server.stdin;
+    that.stdout = that.server.stdout;
+    that.stderr = that.server.stderr;
+    that.stdout.on('data', function (data){
+        that.emit('stdout', data);
+        that.emit('output', data);
+        that.output(data.toString());
+    });
+    that.stderr.on('data', function (data){
+        that.emit('stderr', data);
+        that.emit('output', data);
+        that.output(data.toString());
+    });
+    that.server.on('exit', function (code, signal){
+        console.log(that.name + ' exit:' + code + ' ' + signal);
+        that.emit('exit', code, signal);
+    });
+    that.server.on('error', function (err){
+        console.log(JSON.parse(err));
+    });
+
+    that.pid = that.server.pid;
 };
 
 BMCDLauncher.prototype.stop = function (){
