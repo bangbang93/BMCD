@@ -7,6 +7,7 @@ var events = require('events');
 var util = require('util');
 var async = require('async');
 var path = require('path');
+var debug = require('debug')('BMCD:process');
 
 /**
  *
@@ -22,7 +23,7 @@ var BMCDLauncher = function(name, serverPath, jarFile, options){
     this.options = options || {};
     this.java = this.options.java;
     this.args = ['-jar', path.join(serverPath, jarFile), '--nojline'];
-    this.args = this.args.concat(options.opts);
+    this.args = this.args.concat(options.args);
 };
 
 util.inherits(BMCDLauncher, events.EventEmitter);
@@ -46,14 +47,15 @@ BMCDLauncher.prototype.start = function (cb){
         that.output(data.toString());
     });
     that.server.on('exit', function (code, signal){
-        console.log(that.name + ' exit:' + code + ' ' + signal);
+        debug('%s exit %s:%s', that.name, code, signal);
         that.emit('exit', code, signal);
     });
     that.server.on('error', function (err){
-        console.log(JSON.parse(err));
+        debug('%j', err);
     });
 
     that.pid = that.server.pid;
+    cb();
 };
 
 BMCDLauncher.prototype.stop = function (){

@@ -62,18 +62,14 @@ router.get('/status/:sid', function (req, res, next) {
     })
 });
 
-router.get('/start/:sid', function (req, res){
+router.get('/start/:sid', function (req, res, next){
     var sid = req.params['sid'];
     if (!sid){
         return res.send(400);
     }
     Server.startServer(sid, function (err, pid){
         if (err){
-            if (err.errCode == 1){
-                return res.json(409, err);
-            } else {
-                return res.json(500, err);
-            }
+            next(err);
         } else {
             res.send(pid);
         }

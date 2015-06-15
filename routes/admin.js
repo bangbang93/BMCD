@@ -18,12 +18,13 @@ router.use(function (req, res, next) {
 });
 
 router.post('/server/create', function (req, res) {
-  var name = req.param('name');
-  var host = req.param('host');
-  var port = req.param('port');
-  var path = req.param('path');
-  var file = req.param('file');
-  var args = req.param('args') || [];
+  var name = req.body['name'];
+  var host = req.body['host'];
+  var port = req.body['port'];
+  var path = req.body['path'];
+  var file = req.body['file'];
+  var java = req.body['java'];
+  var args = req.body['args'] || [];
   if (!name || !host || !port || !path || !file) {
     return res.send(400);
   }
@@ -36,6 +37,25 @@ router.post('/server/create', function (req, res) {
       }
     } else {
       res.send(204);
+    }
+  })
+});
+
+var editField = ['name', 'host', 'port', 'path', 'file', 'args', 'java'];
+router.post('/server/edit', function (req, res, next) {
+  var sid = req.body['sid'] || req.body['_id'];
+  if (!sid) {
+    return res.send(400);
+  }
+  var data = {};
+  editField.forEach(function (e) {
+    data[e] = req.body[e];
+  });
+  Server.editServer(sid, data, function (err) {
+    if (err){
+      next(err);
+    } else {
+      res.status(200).end();
     }
   })
 });

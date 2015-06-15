@@ -2,39 +2,52 @@
  * Created by bangbang93 on 14-11-3.
  */
 var Process = require('./process');
-var Server = require('./server');
-var ServerModel = require('../models/server');
+var Server = require('../models/server');
+var async = require('async');
+var Q = require('q');
 var io = global.io;
 
 var serverPool = {};
 
-ServerModel.getAllServer(function (err, servers){
-  if (err){
-    throw err;
-  } else {
-    servers.forEach(function (e){
-      var server = serverPool[e._id] = e.toObject();
-      server.status = 'off';
-      server.startTime = 0;
-      server.process = new Process(server.name, server.path, server.file, server.opt);
-    })
-  }
-});
-
 exports.start = function (sid, cb){
-  var server = serverPool[sid];
-  if (!server){
-    return cb('server does not exists');
-  } else {
-    server.startTime = new Date;
-    server.status = 'on';
-    server.process.start();
-    server.on('output', function (output){
-      io.to(server._id).emit('output', output);
-    });
-    server.on('exit', exitHandle(server._id));
-    cb(null, server);
-  }
+  async.waterfall([
+    function (cb) {
+      var server = serverPool[sid];
+      if (!server){
+        Server.getServerById(sid, function (err, server) {
+          if (err){
+            cb(err);
+          } else {
+            serverPool[sid] = server.toObject();
+            if (!server.java){
+              cb(new Error('no java'));
+            }
+            serverPool[sid].process = new Process(server.name, server.path, server.file, {
+              args: server.args,
+              java: server.java
+            });
+            cb(null ,serverPool[sid]);
+          }
+        })
+      } else {
+        cb(null, server);
+      }
+    },
+    function (server, cb) {
+      if(!server){
+        cb(new Error('server does not exists'));
+      } else{
+        server.startTime = new Date;
+        server.status = 'on';
+        server.process.start();
+        server.process.on('output', function (output){
+          io.to(server._id).emit('output', output);
+        });
+        server.process.on('exit', exitHandle(server._id));
+        cb(null, server);
+      }
+    }
+  ], cb);
 };
 
 exports.stop = function (sid, cb){
@@ -70,7 +83,7 @@ exports.getServer = function (sid, cb){
 function exitHandle(sid){
   return function (){
     var server = serverPool[sid];
-    if (!!server){
+    if (server){
       server.startTime = 0;
       server.status = 'off';
     }

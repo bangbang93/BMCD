@@ -108,6 +108,20 @@ exports.startServer = function (sid, cb) {
   manager.start(sid, cb);
 };
 
+exports.editServer = function (sid, data, cb) {
+  var keys = Object.keys(data);
+  Server.getServerById(sid, function (err, server) {
+    if (err){
+      return cb(err);
+    } else {
+      keys.forEach(function (e) {
+        server[e] = data[e];
+      });
+      server.save(cb);
+    }
+  })
+};
+
 exports.stopServer = function (serverName, cb) {
   if (!!manager) {
     cb(null, manager.stopServer(serverName));
