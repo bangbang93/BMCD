@@ -13,3 +13,6 @@ a {
     line-height: 30px;
     vertical-align: middle;
 }
+#console, #command{
+    width: 100%;
+}
