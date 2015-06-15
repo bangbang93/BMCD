@@ -27,6 +27,7 @@ var UserSchema = new mongoose.Schema({
 });
 
 var ServerSchema = new mongoose.Schema({
+  java: String,
   name: String,
   host: String,
   port: Number,
