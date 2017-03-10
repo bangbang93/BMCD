@@ -2,12 +2,12 @@
     <div>
         <h1>登录到BMCD</h1>
         <hr>
-        <el-form v-model="user">
-            <el-form-item label="用户名">
+        <el-form :model="user" ref="login" @submit.native.prevent="login">
+            <el-form-item label="用户名" prop="username" :rules="[{required: true, message: '用户名不能为空'}]">
                 <el-input v-model="user.username"></el-input>
             </el-form-item>
-            <el-form-item label="密码">
-                <el-input type="password" v-model="user.password"></el-input>
+            <el-form-item label="密码" prop="password" :rules="[{required: true, message: '密码不能为空'}]">
+                <el-input type="password" v-model="user.password" @keydown.enter="login"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="login()">登录</el-button>
@@ -33,17 +33,20 @@
       }
     },
     methods: {
-      async login(){
-        let res = await this.$fetch.post('/api/user/login', this.user);
-        if (res.status == 200){
-          window.location = '/';
-        } else {
-          this.$alert('用户名或密码错误', '登录失败', {
-            callback: ()=>{
-              this.user.password = '';
-            }
-          })
-        }
+      login(){
+        this.$refs['login'].validate(async (valid)=>{
+          if (!valid) return false;
+          let res = await this.$fetch.post('/api/user/login', this.user);
+          if (res.status == 200){
+            window.location = '/';
+          } else {
+            this.$alert('用户名或密码错误', '登录失败', {
+              callback: ()=>{
+                this.user.password = '';
+              }
+            })
+          }
+        })
       }
     }
   }

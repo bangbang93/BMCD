@@ -10,7 +10,7 @@ exports.login = async function (username, password) {
     throw new Error('no such user');
   }
   if (await HashHelper.compare(password, user.password)) {
-    let user = user.toJSON();
+    user = user.toJSON();
     delete user.password;
     return user;
   } else {
