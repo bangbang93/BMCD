@@ -1,0 +1,6 @@
+{
+  "mongodb": {
+    "host"    : "localhost",
+    "database": "bmcd"
+  }
+}

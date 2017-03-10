@@ -1,0 +1,6 @@
+{
+  "secret": "BMCD!!PLEASE CHANGE ME!!",
+  "key": "BMCD_ID",
+  "resave": true,
+  "saveUninitialized": true
+}

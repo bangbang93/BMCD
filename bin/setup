@@ -1,4 +1,35 @@
 #!/usr/bin/env node
 
-const meow = require('meow');
+'use strict';
 
+const program = require('caporal');
+const fs      = require('mz/fs');
+const path    = require('path');
+const shelljs = require('shelljs');
+const pkg = require('../package.json');
+const inquirer = require('inquirer');
+const randomstring = require('randomstring');
+
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+program
+  .version(pkg.version)
+  .command('init', '初始化BMCD数据库')
+  .action(async (args, options, logger) => {
+    // if (await fs.exists(path.join(PROJECT_ROOT, 'config'))){
+    //   return logger.error('已经有配置文件存在，若要重新初始化请删除config目录');
+    // }
+    //
+    // shelljs.cp('-R', path.join(PROJECT_ROOT, 'config.d'), path.join(PROJECT_ROOT, 'config'));
+    const CONFIG_ROOT = path.join(PROJECT_ROOT, 'config');
+    let session = JSON.parse(await fs.readFile(path.resolve(CONFIG_ROOT, 'session.json')));
+    let secret = randomstring.generate({length: 64});
+    secret = await inquirer.prompt({
+      name: 'secret',
+      message: '指定cookie secret',
+      default: secret,
+    });
+    session.secret = secret.secret;
+    await fs.writeFile(path.resolve(CONFIG_ROOT, 'session.json'), JSON.stringify(session, null, 2));
+  });
+
+program.parse(process.argv);
