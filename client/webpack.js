@@ -30,6 +30,7 @@ let config = (function(){
 module.exports = Object.assign(config, {
   entry: {
     index: path.resolve(__dirname, '../client/src/entries/index.js'),
+    login: path.resolve(__dirname, '../client/src/entries/login.js'),
   },
   output: {
     path: path.resolve(__dirname, '../public'),

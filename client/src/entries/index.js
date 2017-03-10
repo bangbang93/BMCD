@@ -12,9 +12,6 @@ import VueSocketIo from 'vue-socket.io'
 
 require('es6-promise').polyfill();
 
-import FirstPage from '../pages/home/first.vue'
-import SecondPage from '../pages/home/second.vue'
-
 Vue.use(Element);
 Vue.use(VueRouter);
 Vue.use(VueFetch);
@@ -22,17 +19,17 @@ Vue.use(VueSocketIo, '/ws/server');
 
 const routes = [{
   path: '/1',
-  component: FirstPage,
+  component: require('../pages/home/first.vue'),
   name: 'first',
   alias: '/'
 }, {
   path: '/2',
-  component: SecondPage,
+  component: require('../pages/home/second.vue'),
   name: 'second'
 },
   {
     path: '*',
-    redirect: '/profile'
+    redirect: '/'
   }];
 
 const router = new VueRouter({
