@@ -26,8 +26,14 @@ exports.getServerById = function (sid) {
   return Model.findById(sid).exec();
 };
 
-exports.getAllServer = function () {
+exports.listAll = function () {
   return Model.find({}).exec();
+};
+
+exports.listByIds = function (ids) {
+  return Model.find({
+    _id: [ids]
+  })
 };
 
 exports.addServer = function (data) {

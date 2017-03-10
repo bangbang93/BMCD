@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('BMCD');
-var Server = require('../service/server');
+var Server = require('../../service/server');
 
 router.use(function (req, res, next){
     if (req.isLogin){

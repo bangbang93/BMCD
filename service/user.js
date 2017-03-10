@@ -2,7 +2,7 @@
  * Created by bangbang93 on 14-10-24.
  */
 var User = require('./user');
-var md5 = require('../lib/md5');
+var md5 = require('./md5');
 
 exports.login = function (username, password, cb){
     User.getUserByName(username, function (err, user){

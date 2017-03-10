@@ -7,7 +7,7 @@ const Schema = new mongoose.Schema({
   username: String,
   password: String,
   servers : [{
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref : 'server'
   }],
   isAdmin : {
@@ -23,6 +23,10 @@ exports.getUserByName = function (username){
     username: username
   }).exec();
 };
+
+exports.getById = function (id) {
+  return Model.findById(id).exec();
+}
 
 exports.addUser = function (username, password){
   return Model.create({

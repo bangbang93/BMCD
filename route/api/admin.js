@@ -1,53 +1,40 @@
 /**
  * Created by bangbang93 on 14-10-24.
  */
-var express = require('express');
-var router = express.Router();
-var debug = require('debug')('BMCD');
+const router = require('express-promise-router');
+const Server = require('../../service/server');
+const Config = require('../../service/config');
+const User   = require('../../service/user');
+const SessionHelper = require('../../helper/session');
 
-var Server = require('../service/server');
-var Config = require('../service/config');
-var User = require('../service/user');
+router.use(SessionHelper.checkLogin, SessionHelper.isAdmin);
 
-router.use(function (req, res, next) {
-  if (!req.isLogin || !req.isAdmin) {
-    res.send(403);
-  } else {
-    next();
-  }
-});
-
-router.post('/server/create', function (req, res) {
-  var name = req.body['name'];
-  var host = req.body['host'];
-  var port = req.body['port'];
-  var path = req.body['path'];
-  var file = req.body['file'];
-  var java = req.body['java'];
-  var args = req.body['args'] || [];
+router.post('/server/create', async function (req, res) {
+  let name   = req.body['name'];
+  let host   = req.body['host'];
+  let port   = req.body['port'];
+  let path   = req.body['path'];
+  let file   = req.body['file'];
+  const java = req.body['java'];
+  const args = req.body['args'] || [];
   if (!name || !host || !port || !path || !file) {
-    return res.send(400);
+    return res.status(400).json({
+      msg: 'missing params'
+    });
   }
-  Server.createServer(name, host, port, path, file, args, function (err) {
-    if (err) {
-      if (err.errno == 34) {
-        res.send(404);
-      } else {
-        res.json(500, err);
-      }
-    } else {
-      res.send(204);
-    }
-  })
+  await Server.createServer(req.body);
+  res.status(201).json({
+    msg: 'create success',
+  });
 });
 
-var editField = ['name', 'host', 'port', 'path', 'file', 'args', 'java'];
+const editField = ['name', 'host', 'port', 'path', 'file', 'args', 'java'];
 router.post('/server/edit', function (req, res, next) {
-  var sid = req.body['sid'] || req.body['_id'];
+  let sid = req.body['sid'] || req.body['_id'];
   if (!sid) {
     return res.send(400);
   }
-  var data = {};
+  const data = {};
   editField.forEach(function (e) {
     data[e] = req.body[e];
   });
@@ -61,7 +48,7 @@ router.post('/server/edit', function (req, res, next) {
 });
 
 router.post('/configure', function (req, res) {
-  var java = req.param('java');
+  const java = req.param('java');
   Config.set('java', java);
   res.send(204);
 });
@@ -73,7 +60,7 @@ router.get('/configure', function (req, res) {
 });
 
 router.get('/configure/:name', function (req, res) {
-  var name = req.param('name');
+  const name = req.param('name');
   Config.get(name, function (err, config){
     if (err){
       res.status(500).json(err);
@@ -101,8 +88,8 @@ router.get('/userList', function (req, res) {
 });
 
 router.post('/changePassword', function (req, res) {
-  var username = req.param('username');
-  var password = req.param('password');
+  const username = req.param('username');
+  const password = req.param('password');
 
   User.changePassword(username, password, function (err) {
     if (err) {

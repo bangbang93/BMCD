@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('BMCD');
 
-var User = require('../service/user');
+var User = require('../../service/user');
 
 router.get('/status', function(req, res) {
     if (req.isLogin){
