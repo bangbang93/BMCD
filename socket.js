@@ -13,7 +13,7 @@ const io = new Server({
 const serverNSP = io.of('/server');
 serverNSP.use(function (socket, next) {
   let req = socket.request;
-  session(req, null, function () {
+  session(req, socket, function () {
     if (!SessionHelper.checkLoginNoRes(req)){
       next(new Error('need login'));
     } else {

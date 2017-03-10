@@ -7,16 +7,30 @@
     </div>
 </template>
 <style>
-    body{
-        background-color:#66ccff;
+    body {
+        background-color: #66ccff;
     }
 </style>
 <script>
-    export default{
-        data(){
-            return{
-                msg:'hello vue'
-            }
+  export default{
+    data(){
+      return {
+        user: {
+          username: '',
+          uid     : '',
         }
+      }
+    },
+    created: async function () {
+      let res = await this.$fetch.get('/api/user/login');
+      if (res.status == 200){
+        this.user = await res.json();
+      } else {
+        window.location = '/login.html';
+      }
+    },
+    methods: {
+
     }
+  }
 </script>

@@ -15,7 +15,7 @@ require('es6-promise').polyfill();
 Vue.use(Element);
 Vue.use(VueRouter);
 Vue.use(VueFetch);
-Vue.use(VueSocketIo, '/ws/server');
+Vue.use(VueSocketIo, '/server');
 
 const routes = [{
   path: '/1',
