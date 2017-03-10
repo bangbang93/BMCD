@@ -1,32 +1,32 @@
 /**
  * Created by bangbang93 on 14-10-24.
  */
-var mongoose = require('mongoose');
-var Config = require('./config');
-var ObjectId = mongoose.Schema.Types.ObjectId;
-var Mixed = mongoose.Schema.Types.Mixed;
+const mongoose = require('mongoose');
+const Config = require('./config/database');
+const ObjectId = mongoose.Schema.Types.ObjectId;
+const Mixed    = mongoose.Schema.Types.Mixed;
 
-mongoose.connect('mongodb://' + Config.db.host + '/' + Config.db.db);
+mongoose.connect(`mongodb://${Config.mongodb.host}/${Config.mongodb.database}`);
 
-var ConfigSchema = new mongoose.Schema({
-  key: String,
+const ConfigSchema = new mongoose.Schema({
+  key  : String,
   value: Mixed
 });
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   username: String,
   password: String,
-  servers: [{
+  servers : [{
     type: ObjectId,
-    ref: 'server'
+    ref : 'server'
   }],
-  isAdmin: {
-    type: Boolean,
+  isAdmin : {
+    type   : Boolean,
     default: false
   }
 });
 
-var ServerSchema = new mongoose.Schema({
+const ServerSchema = new mongoose.Schema({
   java: String,
   name: String,
   host: String,
@@ -34,7 +34,7 @@ var ServerSchema = new mongoose.Schema({
   path: String,
   file: String,
   args: [String],
-  opt: Mixed
+  opt : Mixed
 });
 
 exports.ServerModel = mongoose.model('server', ServerSchema);

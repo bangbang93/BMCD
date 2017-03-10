@@ -3,10 +3,8 @@
  */
 'use strict';
 module.exports = {
-  engine: {
-    dialect: 'mysql',
-    host: 'localhost',
-    username: 'root',
-    password: '',
+  mongodb: {
+    host    : 'localhost',
+    database: 'bmcd'
   }
 };
