@@ -18,19 +18,17 @@ Vue.use(VueFetch);
 Vue.use(VueSocketIo, '/server');
 
 const routes = [{
-  path: '/1',
-  component: require('../pages/home/first.vue'),
-  name: 'first',
-  alias: '/'
+  path: '/',
+  component: require('../pages/dashboard.vue'),
+  name: 'index',
 }, {
   path: '/2',
   component: require('../pages/home/second.vue'),
-  name: 'second'
-},
-  {
+  name: 'server'
+}, {
     path: '*',
     redirect: '/'
-  }];
+}];
 
 const router = new VueRouter({
   routes,

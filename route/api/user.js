@@ -39,6 +39,13 @@ router.post('/login', async function (req, res, next) {
 
 router.use(SessionHelper.checkLogin);
 
+router.get('/dashboard', async function (req, res) {
+  let uid = req.session.uid;
+  let dashboard = await UserService.getDashboard(uid);
+
+  res.json(dashboard);
+});
+
 router.get('/login', function (req, res) {
   res.json({
     uid: req.session.uid,

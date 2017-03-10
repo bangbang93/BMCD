@@ -3,6 +3,8 @@
  */
 const UserModel = require('../model/user');
 const HashHelper = require('../helper/hash');
+const ServerModel = require('../model/server');
+const os = require('os');
 
 exports.login = async function (username, password) {
   let user = await UserModel.getUserByName(username);
@@ -38,3 +40,24 @@ exports.changePassword = async function (uid, oldPassword, newPassword) {
 exports.addUser = async function (username, password) {
   return UserModel.addUser(username, await HashHelper.hashPassword(password));
 };
+
+exports.getDashboard = async function (uid) {
+  let user = await UserModel.getById(uid);
+  let dashboard = {};
+  if (user.servers){
+    dashboard.serverCount = user.servers.length;
+  } else {
+    dashboard.serverCount = 0;
+  }
+
+  dashboard.os = {
+    uptime: os.uptime(),
+    freemem: os.freemem(),
+    totalmem: os.totalmem(),
+    release: os.release(),
+    hostname: os.hostname(),
+    cpus: os.cpus(),
+  };
+
+  return dashboard;
+}
