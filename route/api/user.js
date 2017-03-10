@@ -1,66 +1,56 @@
-var express = require('express');
-var router = express.Router();
-var debug = require('debug')('BMCD');
+const router = require('express-promise-router');
 
-var User = require('../../service/user');
+const UserService   = require('../../service/user');
+const SessionHelper = require('../../helper/session');
 
-router.get('/status', function(req, res) {
-    if (req.isLogin){
-        res.json({
-            success: true,
-            code: 0,
-            message: '已登录',
-            username: req.session['username'],
-            isAdmin: req.isAdmin
-        })
-    } else {
-        res.json({
-            success: false,
-            code: 1,
-            message: '请先登录'
-        });
-    }
-});
+router.post('/login', async function (req, res, next) {
+  let username = req.body.username;
+  let password = req.body.password;
 
-router.post('/login', function (req, res){
-    var username = req.param('username');
-    var password = req.param('password');
+  if (!username || !password) {
+    return res.status(400).json({
+      msg: 'missing params'
+    });
+  }
 
-    if (!username || !password){
-        return res.send(400);
-    }
-
-    User.login(username, password, function (err, result){
-        if (err){
-            res.json(500, err);
-        } else {
-            if (result){
-                req.session['username'] = username;
-                req.session['uid'] = result['uid'];
-                req.session['isAdmin'] = result['isAdmin'];
-                res.json({
-                    success: true,
-                    code: 0,
-                    message: '登录成功'
-                });
-            } else {
-                res.status(403).json({
-                    success: false,
-                    code: 1,
-                    message: '用户名或密码错误'
-                })
-            }
-        }
-    })
-});
-
-router.get('/logout', function (req, res){
-    req.session = null;
+  try {
+    let user             = await UserService.login(username, password);
+    req.session.uid      = user._id;
+    req.session.username = user.username;
     res.json({
-        success: true,
-        code: 0,
-        message:'退出成功'
-    })
+      uid     : user._id,
+      username: user.username
+    });
+  }
+  catch (e) {
+    switch (e.message) {
+      case 'wrong password':
+      case 'no such user':
+        res.status(401).json({
+          msg: 'wrong password'
+        });
+        break;
+      default:
+        next(e);
+    }
+  }
+});
+
+router.use(SessionHelper.checkLogin);
+
+router.get('/login', function (req, res) {
+  res.json({
+    uid: req.session.uid,
+    username: req.session.username
+  });
+});
+
+
+router.get('/logout', function (req, res) {
+  req.session.destroy();
+  res.json({
+    msg: 'success'
+  });
 });
 
 module.exports = router;
