@@ -25,6 +25,9 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+const io = require('../socket');
+io.listen(server);
+
 const processConfig = require('../process.json');
 process.title = processConfig.apps[0].name;
 

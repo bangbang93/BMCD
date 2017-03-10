@@ -33,7 +33,8 @@
     "morgan": "~1.7.0",
     "mz": "^2.6.0",
     "sequelize": "^3.27.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",

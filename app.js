@@ -19,7 +19,7 @@ if (app.get('env') == 'development'){
 const session = require('cookie-session');
 
 app.use(cookieParser());
-app.use(session());
+app.use(session(require('./config/session')));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
