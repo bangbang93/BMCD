@@ -1,7 +1,7 @@
 /**
  * Created by bangbang93 on 14-8-20.
  */
-const router        = require('express-promise-router');
+const router        = require('express-promise-router')();
 const ServerService = require('../../service/server');
 const SessionHelper = require('../../helper/session');
 

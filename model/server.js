@@ -2,6 +2,7 @@
  * Created by bangbang93 on 14-10-7.
  */
 const mongoose = require('../model').mongoose;
+const Mixed = mongoose.Schema.Types.Mixed;
 
 const Schema = new mongoose.Schema({
   java: String,

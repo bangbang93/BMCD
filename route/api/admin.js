@@ -1,7 +1,7 @@
 /**
  * Created by bangbang93 on 14-10-24.
  */
-const router = require('express-promise-router');
+const router = require('express-promise-router')();
 const Server = require('../../service/server');
 const Config = require('../../service/config');
 const User   = require('../../service/user');

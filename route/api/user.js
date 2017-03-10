@@ -1,4 +1,5 @@
-const router = require('express-promise-router');
+'use strict';
+const router = require('express-promise-router')();
 
 const UserService   = require('../../service/user');
 const SessionHelper = require('../../helper/session');
