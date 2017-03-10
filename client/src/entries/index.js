@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-default/index.css'
 import App from '../pages/index.vue'
 import VueRouter from 'vue-router'
 import VueFetch from 'vue-fetch'
+import VueSocketIo from 'vue-socket.io'
 
 require('es6-promise').polyfill();
 
@@ -17,6 +18,7 @@ import SecondPage from '../pages/home/second.vue'
 Vue.use(Element);
 Vue.use(VueRouter);
 Vue.use(VueFetch);
+Vue.use(VueSocketIo, '/ws/server');
 
 const routes = [{
   path: '/1',
