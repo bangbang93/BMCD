@@ -6,7 +6,7 @@ const SessionHelper = require('./helper/session');
 const session = require('cookie-session')(require('./config/session'));
 
 const io = new Server({
-  path: '/ws',
+  path: '/socket.io',
   serveClient: false,
 });
 

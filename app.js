@@ -25,15 +25,12 @@ app.use(session(require('./config/session')));
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./route/index'));
 
 require('express-simple-route')(path.join(__dirname, 'route'), app);
 
-app.use(history({
-  verbose: true
-}));
+app.use(history());
 
 if (app.get('env') == 'development'){
   let webpack = require('webpack');
