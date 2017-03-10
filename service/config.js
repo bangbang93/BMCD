@@ -1,35 +1,16 @@
 /**
  * Created by bangbang93 on 14-10-24.
  */
-var Config = require('./config');
+const ConfigModel = require('../model/config');
 
-exports.get = function (key, cb){
-    if (!cb){
-        cb = function (){};
-    }
-    Config.getAll(function (err, config){
-        if (err){
-            cb(err);
-        } else {
-            cb(null, config[key]);
-        }
-    })
+exports.get = function (key) {
+  return ConfigModel.get(key);
 };
 
-exports.getAll = function (cb){
-    if (!cb){
-        cb = function (){};
-    }
-    Config.getAll(function (err, config){
-        cb(err, config);
-    })
+exports.getAll = function () {
+  return ConfigModel.getAll();
 };
 
-exports.set = function (key, value, cb){
-    if (!cb){
-        cb = function (){};
-    }
-    Config.set(key, value, function (err){
-        cb(err);
-    })
+exports.set = function (key, value) {
+  return ConfigModel.set(key, value);
 };

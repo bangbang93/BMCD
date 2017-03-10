@@ -28,46 +28,30 @@ router.post('/server/create', async function (req, res) {
   });
 });
 
-const editField = ['name', 'host', 'port', 'path', 'file', 'args', 'java'];
-router.post('/server/edit', function (req, res, next) {
-  let sid = req.body['sid'] || req.body['_id'];
-  if (!sid) {
-    return res.send(400);
-  }
-  const data = {};
-  editField.forEach(function (e) {
-    data[e] = req.body[e];
+router.put('/server/:sid', async function (req, res, next) {
+  let sid = req.params['sid'];
+
+  await Server.editServer(sid, data);
+
+  res.json({
+    msg: 'success'
   });
-  Server.editServer(sid, data, function (err) {
-    if (err){
-      next(err);
-    } else {
-      res.status(200).end();
-    }
-  })
 });
 
-router.post('/configure', function (req, res) {
-  const java = req.param('java');
-  Config.set('java', java);
-  res.send(204);
+router.put('/configure/:key', function (req, res) {
+  res.sendStatus(204);
 });
 
-router.get('/configure', function (req, res) {
-  Config.getAll(function (err, config) {
-    res.json(config);
-  })
+router.get('/configure', async function (req, res) {
+  let configs = await Config.getAll();
+  res.json(configs);
 });
 
-router.get('/configure/:name', function (req, res) {
-  const name = req.param('name');
-  Config.get(name, function (err, config){
-    if (err){
-      res.status(500).json(err);
-    } else {
-      res.json(config);
-    }
-  })
+router.get('/configure/:key', async function (req, res) {
+  const key = req.params['key'];
+
+  let config = await Config.get(key);
+  res.json(config);
 });
 
 router.get('/status', function (req, res) {
@@ -81,23 +65,32 @@ router.get('/status', function (req, res) {
   })
 });
 
-router.get('/userList', function (req, res) {
-  User.listUser(function (users) {
-    res.json(users);
-  })
+router.get('/userList', async function (req, res) {
+  let users = await User.listUser();
+  res.json(users);
 });
 
-router.post('/changePassword', function (req, res) {
-  const username = req.param('username');
-  const password = req.param('password');
+router.post('/changePassword', async function (req, res, next) {
+  const uid = req.session.uid;
+  const {oldPassword, newPassword} = req.body;
 
-  User.changePassword(username, password, function (err) {
-    if (err) {
-      res.json(500, err);
-    } else {
-      res.send(204);
+  try {
+    await User.changePassword(uid, oldPassword, newPassword);
+    res.json({
+      msg: 'success'
+    });
+  }
+  catch(e){
+    switch (e.message){
+      case 'wrong password':
+        res.status(403).json({
+          msg: e.message
+        });
+        break;
+      default:
+        next(e);
     }
-  })
+  }
 });
 
 module.exports = router;

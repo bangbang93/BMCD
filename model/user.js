@@ -6,6 +6,7 @@ const mongoose = require('../model').mongoose;
 const Schema = new mongoose.Schema({
   username: String,
   password: String,
+  salt: String,
   servers : [{
     type: mongoose.Schema.Types.ObjectId,
     ref : 'server'
