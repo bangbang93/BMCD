@@ -13,11 +13,11 @@ const Model = mongoose.model('config', Schema);
 exports.get = function (key){
     return Model.findOne({
       key: key
-    });
+    }).exec();
 };
 
 exports.getAll = function (){
-    return Model.find({});
+    return Model.find({}).exec();
 };
 
 exports.set = function (key, value){
@@ -28,5 +28,5 @@ exports.set = function (key, value){
       value
     }, {
       upsert: true,
-    })
+    }).exec();
 };

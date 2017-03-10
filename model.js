@@ -8,24 +8,6 @@ const Mixed    = mongoose.Schema.Types.Mixed;
 
 mongoose.connect(`mongodb://${Config.mongodb.host}/${Config.mongodb.database}`);
 
-const ConfigSchema = new mongoose.Schema({
-  key  : String,
-  value: Mixed
-});
-
-const UserSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  servers : [{
-    type: ObjectId,
-    ref : 'server'
-  }],
-  isAdmin : {
-    type   : Boolean,
-    default: false
-  }
-});
-
 const ServerSchema = new mongoose.Schema({
   java: String,
   name: String,
@@ -37,6 +19,4 @@ const ServerSchema = new mongoose.Schema({
   opt : Mixed
 });
 
-exports.ServerModel = mongoose.model('server', ServerSchema);
-exports.ConfigModel = mongoose.model('config', ConfigSchema);
-exports.UserModel = mongoose.model('user', UserSchema);
+exports.mongoose = mongoose;
