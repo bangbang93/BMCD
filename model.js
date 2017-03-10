@@ -3,8 +3,8 @@
  */
 const mongoose = require('mongoose');
 const Config = require('./config/database');
-const ObjectId = mongoose.Schema.Types.ObjectId;
-const Mixed    = mongoose.Schema.Types.Mixed;
+
+mongoose.Promise = require('bluebird');
 
 mongoose.connect(`mongodb://${Config.mongodb.host}/${Config.mongodb.database}`);
 
