@@ -1,37 +1,35 @@
 /**
  * Created by bangbang93 on 14-10-7.
  */
-var Server = require('../model').ServerModel;
-var User = require('../model').UserModel;
+const mongoose = require('../model').mongoose;
 
-exports.getServerByName = function (serverName, cb){
-    Server.findOne({
-        name: serverName
-    }, cb);
+const Schema = new mongoose.Schema({
+  java: String,
+  name: String,
+  host: String,
+  port: Number,
+  path: String,
+  file: String,
+  args: [String],
+  opt : Mixed
+});
+
+const Model = mongoose.model('server', Schema);
+
+exports.getServerByName = function (serverName) {
+  return Model.findOne({
+    name: serverName
+  }).exec();
 };
 
-exports.getServersByUser = function (uid, cb){
-    User.findById(uid, 'servers', function (err, doc){
-      doc = doc || {};
-      cb(err, doc.servers);
-    })
+exports.getServerById = function (sid) {
+  return Model.findById(sid).exec();
 };
 
-exports.getServerById = function (sid, cb){
-  Server.findById(sid, cb);
+exports.getAllServer = function () {
+  return Model.find({}).exec();
 };
 
-exports.getAllServer = function (cb){
-  Server.find({}, cb);
-};
-
-exports.addServer = function (data, cb){
-    var server = new Server({
-      name: data.name,
-      host: data.host,
-      port: data.port,
-      path: data.path,
-      file: data.file
-    });
-  server.save(cb);
+exports.addServer = function (data) {
+  return Model.create(data);
 };
