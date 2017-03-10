@@ -35,6 +35,6 @@ exports.changePassword = async function (uid, oldPassword, newPassword) {
   return user.save();
 };
 
-exports.addUser = function (username, password) {
-  return UserModel.addUser(username, HashHelper.hashPassword(password));
+exports.addUser = async function (username, password) {
+  return UserModel.addUser(username, await HashHelper.hashPassword(password));
 };

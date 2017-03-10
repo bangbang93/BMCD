@@ -9,27 +9,78 @@ const shelljs = require('shelljs');
 const pkg = require('../package.json');
 const inquirer = require('inquirer');
 const randomstring = require('randomstring');
+const ora = require('ora');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 program
   .version(pkg.version)
   .command('init', '初始化BMCD数据库')
   .action(async (args, options, logger) => {
-    // if (await fs.exists(path.join(PROJECT_ROOT, 'config'))){
-    //   return logger.error('已经有配置文件存在，若要重新初始化请删除config目录');
-    // }
-    //
-    // shelljs.cp('-R', path.join(PROJECT_ROOT, 'config.d'), path.join(PROJECT_ROOT, 'config'));
+    if (await fs.exists(path.join(PROJECT_ROOT, 'config'))){
+      return logger.error('已经有配置文件存在，若要重新初始化请删除config目录');
+    }
+
+    let spinner = ora('复制配置文件').start();
+    shelljs.cp('-R', path.join(PROJECT_ROOT, 'config.d'), path.join(PROJECT_ROOT, 'config'));
+    spinner.succeed();
     const CONFIG_ROOT = path.join(PROJECT_ROOT, 'config');
     let session = JSON.parse(await fs.readFile(path.resolve(CONFIG_ROOT, 'session.json')));
-    let secret = randomstring.generate({length: 64});
-    secret = await inquirer.prompt({
+    let questions = await inquirer.prompt([{
       name: 'secret',
       message: '指定cookie secret',
-      default: secret,
-    });
-    session.secret = secret.secret;
+      default: randomstring.generate({length: 64}),
+    }, {
+      name: 'username',
+      message: '管理员用户名',
+      default: 'admin',
+    }, {
+      name: 'password',
+      message: '管理员密码',
+      default: randomstring.generate({length: 10}),
+      type: 'password'
+    }]);
+    session.secret = questions.secret;
+    spinner = ora('保存配置').start();
     await fs.writeFile(path.resolve(CONFIG_ROOT, 'session.json'), JSON.stringify(session, null, 2));
+    spinner.succeed();
+    spinner = ora('初始化数据库').start();
+    const UserService = require('../service/user');
+    await UserService.addUser(questions.username, questions.password);
+    spinner.succeed();
+    spinner = ora('寻找java').start();
+    let java;
+    if (process.env.JAVA_HOME){
+      java = path.join(process.env.JAVA_HOME, 'bin', 'java');
+    }
+    if (!java){
+      const which = shelljs.which('java');
+      if (which){
+        java = which;
+      }
+    }
+    if (!java){
+      spinner.fail();
+      let questions = await inquirer.prompt({
+        name: 'java',
+        question: '未能自动找到可用的java，请手工输入',
+        validate: async function (input) {
+          return fs.exists(input) &&
+            await fs.stat(input).isFile();
+        }
+      });
+      java = questions.java;
+    } else {
+      spinner.succeed();
+    }
+
+    spinner = ora('保存设置').start();
+    const ConfigService = require('../service/config');
+    await ConfigService.set('defaultJava', java);
+    spinner.succeed();
+
+    logger.info('管理员用户名', questions.username);
+    logger.info('管理员密码', questions.password);
+    process.exit(0);
   });
 
 program.parse(process.argv);

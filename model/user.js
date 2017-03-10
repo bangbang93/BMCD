@@ -4,7 +4,10 @@
 const mongoose = require('../model').mongoose;
 
 const Schema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true,
+  },
   password: String,
   salt: String,
   servers : [{
@@ -27,7 +30,7 @@ exports.getUserByName = function (username){
 
 exports.getById = function (id) {
   return Model.findById(id).exec();
-}
+};
 
 exports.addUser = function (username, password){
   return Model.create({

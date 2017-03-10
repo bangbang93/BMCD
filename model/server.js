@@ -6,7 +6,10 @@ const Mixed = mongoose.Schema.Types.Mixed;
 
 const Schema = new mongoose.Schema({
   java: String,
-  name: String,
+  name: {
+    type: String,
+    unique: true,
+  },
   host: String,
   port: Number,
   path: String,

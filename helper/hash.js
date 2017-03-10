@@ -3,10 +3,10 @@
  */
 const bcrypt = require('bcrypt');
 
-exports.hashPassword = function (password) {
+exports.hashPassword = async function (password) {
   return bcrypt.hash(password, 16);
 };
 
-exports.compare = function (password, hash) {
+exports.compare = async function (password, hash) {
   return bcrypt.compare(password, hash);
 };
