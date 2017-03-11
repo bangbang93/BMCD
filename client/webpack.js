@@ -18,7 +18,6 @@ let config = (function(){
       devtool: false,
     },
     dev: {
-      port: 8080,
       assetsSubDirectory: 'static',
       assetsPublicPath: '/',
       cssSourceMap: false,

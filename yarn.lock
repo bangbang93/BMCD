@@ -1324,6 +1324,10 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/core-util-is/download/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+cpu-stats@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/cpu-stats/download/cpu-stats-1.0.0.tgz#32a929d719379f35d0d3ee0c2d2d13ef6ce15fef"
+
 crc@3.4.4:
   version "3.4.4"
   resolved "http://registry.npm.taobao.org/crc/download/crc-3.4.4.tgz#9da1e980e3bd44fc5c93bf5ab3da3378d85e466b"

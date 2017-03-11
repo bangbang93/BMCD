@@ -5,6 +5,7 @@ const UserModel = require('../model/user');
 const HashHelper = require('../helper/hash');
 const ServerModel = require('../model/server');
 const os = require('os');
+const PromiseHelper = require('../helper/os');
 
 exports.login = async function (username, password) {
   let user = await UserModel.getUserByName(username);
@@ -57,7 +58,8 @@ exports.getDashboard = async function (uid) {
     release: os.release(),
     hostname: os.hostname(),
     cpus: os.cpus(),
+    cpuPercent: await PromiseHelper.cpuPercent(),
   };
 
   return dashboard;
-}
+};
