@@ -3,29 +3,14 @@
  */
 const Server      = require('socket.io');
 const SessionHelper = require('./helper/session');
-const session = require('cookie-session')(require('./config/session'));
 
 const io = new Server({
   path: '/socket.io',
   serveClient: false,
 });
 
-const serverNSP = io.of('/server');
-serverNSP.use(function (socket, next) {
-  let req = socket.request;
-  session(req, socket, function () {
-    if (!SessionHelper.checkLoginNoRes(req)){
-      next(new Error('need login'));
-    } else {
-      next();
-    }
-  })
-});
+require('./socket/server')(io.of('/server'));
+require('./socket/dashboard')(io.of('/dashboard'));
 
-serverNSP.on('connection', function (socket){
-  socket.on('getServerConsole', function (data) {
-    socket.join(data.server);
-  });
-});
 
 module.exports = io;

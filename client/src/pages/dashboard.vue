@@ -71,6 +71,9 @@
 <script>
     import prettyByte from 'pretty-bytes'
     import prettyMs from 'pretty-ms'
+    import io from '../helper/socket'
+    import namespace from '../etc/namespace'
+
     export default {
       data() {
         return {
@@ -90,35 +93,42 @@
         }
       },
       computed: {
-        usedmem: function () {
+        usedmem () {
           return this.dashboard.os.totalmem - this.dashboard.os.freemem;
         },
-        cpuModel: function () {
+        cpuModel () {
           let cpus = this.dashboard.os.cpus;
           if (cpus.length == 0){
             return 'unknown';
           }
           return cpus[0].model;
         },
-        memPercentage: function () {
+        memPercentage () {
           return ~~(this.usedmem / this.dashboard.os.totalmem * 100);
         },
-        cpuPercent: function () {
-          return Number(this.dashboard.os.cpuPercent);
+        cpuPercent () {
+          return ~~this.dashboard.os.cpuPercent;
         }
       },
       async created(){
         let res = await this.$fetch.get('/api/user/dashboard');
         this.dashboard = await res.json();
-        console.log(this.dashboard);
+
+        io(namespace.dashboard, this);
+        this.$on('osStat', (data)=>{
+          this.dashboard.os = data;
+        })
+      },
+      async destroyed(){
+        this.$emit('destroyed');
       },
       filters: {
-        byte: function (value) {
+        byte (value) {
           return prettyByte(value);
         },
-        ms: function (value) {
+        ms (value) {
           return prettyMs(value);
         }
       }
-    }
+    };
 </script>

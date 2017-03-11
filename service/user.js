@@ -63,3 +63,15 @@ exports.getDashboard = async function (uid) {
 
   return dashboard;
 };
+
+exports.getOsDashboard = async function () {
+  return {
+    uptime: os.uptime(),
+    freemem: os.freemem(),
+    totalmem: os.totalmem(),
+    release: os.release(),
+    hostname: os.hostname(),
+    cpus: os.cpus(),
+    cpuPercent: await PromiseHelper.cpuPercent(),
+  };
+};
