@@ -20,9 +20,13 @@ const routes = [{
   component: require('../pages/dashboard.vue'),
   name: 'index',
 }, {
-  path: '/2',
+  path: '/server',
   component: require('../pages/home/second.vue'),
-  name: 'server'
+  name: 'server.list'
+}, {
+  path: '/server/add',
+  component: require('../pages/server/add.vue'),
+  name: 'server.add'
 }, {
     path: '*',
     redirect: '/'

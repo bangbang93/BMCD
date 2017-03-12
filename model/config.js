@@ -6,7 +6,8 @@ const Mixed = mongoose.Schema.Types.Mixed;
 
 const Schema = new mongoose.Schema({
   key  : String,
-  value: Mixed
+  value: Mixed,
+  isPublic: Boolean,
 });
 
 const Model = mongoose.model('config', Schema);
@@ -21,12 +22,13 @@ exports.getAll = function (){
     return Model.find({}).exec();
 };
 
-exports.set = function (key, value){
+exports.set = function (key, value, isPublic = false){
     return Model.update({
       key
     }, {
       key,
-      value
+      value,
+      isPublic
     }, {
       upsert: true,
     }).exec();

@@ -76,6 +76,7 @@ program
     spinner = ora('保存设置').start();
     const ConfigService = require('../service/config');
     await ConfigService.set('defaultJava', java);
+    await ConfigService.set('javas', [java], true);
     spinner.succeed();
 
     logger.info('管理员用户名', questions.username);

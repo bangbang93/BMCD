@@ -13,7 +13,7 @@ const Schema = new mongoose.Schema({
   host: String,
   port: Number,
   path: String,
-  file: String,
+  jar: String,
   args: [String],
   opt : Mixed
 });

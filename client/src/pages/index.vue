@@ -1,18 +1,21 @@
 <template>
     <div>
         <el-row>
-            <el-col :span="8" class="menu">
+            <el-col :span="menuWidth" class="menu">
                 <h2>BMCD {{bmcd.version}}</h2>
                 <el-menu @select="selectMenu">
                     <el-menu-item index="index">
                         首页
                     </el-menu-item>
-                    <el-menu-item index="server">
-                        服务器
-                    </el-menu-item>
+                    <el-submenu index="server">
+                        <template slot="title">服务器</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="server.add"><i class="el-icon-plus">添加服务器</i></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
                 </el-menu>
             </el-col>
-            <el-col :span="16" :offset="8">
+            <el-col :span="16" :offset="menuWidth">
                 <router-view></router-view>
             </el-col>
         </el-row>
@@ -46,7 +49,8 @@
         user: {
           username: '',
           uid     : '',
-        }
+        },
+        menuWidth: 4,
       }
     },
     created: async function () {
